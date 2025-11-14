@@ -16,9 +16,11 @@ export type Database = {
     Tables: {
       cases: {
         Row: {
+          admin_notes: string[] | null
           assigned_agent_id: string | null
           completed_at: string | null
           created_at: string
+          current_stage: Database["public"]["Enums"]["case_stage"] | null
           guarantee_deadline: string | null
           guarantee_triggered: boolean | null
           id: string
@@ -30,9 +32,11 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          admin_notes?: string[] | null
           assigned_agent_id?: string | null
           completed_at?: string | null
           created_at?: string
+          current_stage?: Database["public"]["Enums"]["case_stage"] | null
           guarantee_deadline?: string | null
           guarantee_triggered?: boolean | null
           id?: string
@@ -44,9 +48,11 @@ export type Database = {
           user_id: string
         }
         Update: {
+          admin_notes?: string[] | null
           assigned_agent_id?: string | null
           completed_at?: string | null
           created_at?: string
+          current_stage?: Database["public"]["Enums"]["case_stage"] | null
           guarantee_deadline?: string | null
           guarantee_triggered?: boolean | null
           id?: string
@@ -88,6 +94,8 @@ export type Database = {
       }
       documents: {
         Row: {
+          admin_viewed_at: string | null
+          admin_viewed_by: string | null
           case_id: string
           checksum: string | null
           content_type: string
@@ -100,8 +108,11 @@ export type Database = {
           uploaded_at: string
           uploader_ip: string | null
           user_id: string
+          verification_status: string | null
         }
         Insert: {
+          admin_viewed_at?: string | null
+          admin_viewed_by?: string | null
           case_id: string
           checksum?: string | null
           content_type: string
@@ -114,8 +125,11 @@ export type Database = {
           uploaded_at?: string
           uploader_ip?: string | null
           user_id: string
+          verification_status?: string | null
         }
         Update: {
+          admin_viewed_at?: string | null
+          admin_viewed_by?: string | null
           case_id?: string
           checksum?: string | null
           content_type?: string
@@ -128,6 +142,7 @@ export type Database = {
           uploaded_at?: string
           uploader_ip?: string | null
           user_id?: string
+          verification_status?: string | null
         }
         Relationships: [
           {
@@ -145,6 +160,10 @@ export type Database = {
           created_at: string
           deadline_at: string
           id: string
+          pause_reason: string | null
+          paused_at: string | null
+          refund_eligible: boolean | null
+          refund_notified_at: string | null
           start_at: string
           status: Database["public"]["Enums"]["timer_status"]
           updated_at: string
@@ -155,6 +174,10 @@ export type Database = {
           created_at?: string
           deadline_at: string
           id?: string
+          pause_reason?: string | null
+          paused_at?: string | null
+          refund_eligible?: boolean | null
+          refund_notified_at?: string | null
           start_at: string
           status?: Database["public"]["Enums"]["timer_status"]
           updated_at?: string
@@ -165,6 +188,10 @@ export type Database = {
           created_at?: string
           deadline_at?: string
           id?: string
+          pause_reason?: string | null
+          paused_at?: string | null
+          refund_eligible?: boolean | null
+          refund_notified_at?: string | null
           start_at?: string
           status?: Database["public"]["Enums"]["timer_status"]
           updated_at?: string
@@ -188,6 +215,7 @@ export type Database = {
           created_at: string
           from_user_id: string
           id: string
+          is_admin_message: boolean | null
           read_at: string | null
           to_user_id: string | null
         }
@@ -198,6 +226,7 @@ export type Database = {
           created_at?: string
           from_user_id: string
           id?: string
+          is_admin_message?: boolean | null
           read_at?: string | null
           to_user_id?: string | null
         }
@@ -208,6 +237,7 @@ export type Database = {
           created_at?: string
           from_user_id?: string
           id?: string
+          is_admin_message?: boolean | null
           read_at?: string | null
           to_user_id?: string | null
         }
@@ -221,10 +251,47 @@ export type Database = {
           },
         ]
       }
+      notifications: {
+        Row: {
+          created_at: string | null
+          id: string
+          link: string | null
+          message: string
+          read: boolean | null
+          read_at: string | null
+          title: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          link?: string | null
+          message: string
+          read?: boolean | null
+          read_at?: string | null
+          title: string
+          type: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          link?: string | null
+          message?: string
+          read?: boolean | null
+          read_at?: string | null
+          title?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       payments: {
         Row: {
           amount: number
           case_id: string | null
+          confirmation_sent_at: string | null
           created_at: string
           currency: string | null
           id: string
@@ -232,6 +299,7 @@ export type Database = {
           paid_at: string | null
           payment_status: string
           plan: Database["public"]["Enums"]["plan_type"]
+          receipt_url: string | null
           refund_processed: boolean | null
           refund_requested: boolean | null
           user_id: string
@@ -239,6 +307,7 @@ export type Database = {
         Insert: {
           amount: number
           case_id?: string | null
+          confirmation_sent_at?: string | null
           created_at?: string
           currency?: string | null
           id?: string
@@ -246,6 +315,7 @@ export type Database = {
           paid_at?: string | null
           payment_status?: string
           plan: Database["public"]["Enums"]["plan_type"]
+          receipt_url?: string | null
           refund_processed?: boolean | null
           refund_requested?: boolean | null
           user_id: string
@@ -253,6 +323,7 @@ export type Database = {
         Update: {
           amount?: number
           case_id?: string | null
+          confirmation_sent_at?: string | null
           created_at?: string
           currency?: string | null
           id?: string
@@ -260,6 +331,7 @@ export type Database = {
           paid_at?: string | null
           payment_status?: string
           plan?: Database["public"]["Enums"]["plan_type"]
+          receipt_url?: string | null
           refund_processed?: boolean | null
           refund_requested?: boolean | null
           user_id?: string
@@ -281,6 +353,9 @@ export type Database = {
           created_at: string
           dob: string | null
           email_verified: boolean | null
+          encryption_key_id: string | null
+          experian_password_encrypted: string | null
+          experian_username: string | null
           full_name: string
           id: string
           last_login_at: string | null
@@ -288,6 +363,7 @@ export type Database = {
           phone_verified: boolean | null
           retention_expiry: string | null
           soft_deleted: boolean | null
+          ssn_last4: string | null
           twofa_enabled: boolean | null
           updated_at: string
           verified_at: string | null
@@ -298,6 +374,9 @@ export type Database = {
           created_at?: string
           dob?: string | null
           email_verified?: boolean | null
+          encryption_key_id?: string | null
+          experian_password_encrypted?: string | null
+          experian_username?: string | null
           full_name: string
           id: string
           last_login_at?: string | null
@@ -305,6 +384,7 @@ export type Database = {
           phone_verified?: boolean | null
           retention_expiry?: string | null
           soft_deleted?: boolean | null
+          ssn_last4?: string | null
           twofa_enabled?: boolean | null
           updated_at?: string
           verified_at?: string | null
@@ -315,6 +395,9 @@ export type Database = {
           created_at?: string
           dob?: string | null
           email_verified?: boolean | null
+          encryption_key_id?: string | null
+          experian_password_encrypted?: string | null
+          experian_username?: string | null
           full_name?: string
           id?: string
           last_login_at?: string | null
@@ -322,6 +405,7 @@ export type Database = {
           phone_verified?: boolean | null
           retention_expiry?: string | null
           soft_deleted?: boolean | null
+          ssn_last4?: string | null
           twofa_enabled?: boolean | null
           updated_at?: string
           verified_at?: string | null
@@ -364,6 +448,12 @@ export type Database = {
     }
     Enums: {
       app_role: "client" | "admin" | "agent" | "auditor"
+      case_stage:
+        | "reviewing_docs"
+        | "drafting_disputes"
+        | "submitted"
+        | "processing_48hr"
+        | "complete"
       case_status:
         | "not_started"
         | "files_needed"
@@ -510,6 +600,13 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["client", "admin", "agent", "auditor"],
+      case_stage: [
+        "reviewing_docs",
+        "drafting_disputes",
+        "submitted",
+        "processing_48hr",
+        "complete",
+      ],
       case_status: [
         "not_started",
         "files_needed",
