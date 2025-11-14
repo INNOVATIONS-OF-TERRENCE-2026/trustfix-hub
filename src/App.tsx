@@ -10,6 +10,9 @@ import FAQ from "./pages/FAQ";
 import Contact from "./pages/Contact";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
+import Dashboard from "./pages/portal/Dashboard";
+import Documents from "./pages/portal/Documents";
+import Messages from "./pages/portal/Messages";
 
 const queryClient = new QueryClient();
 
@@ -26,6 +29,9 @@ const App = () => (
           <Route path="/faq" element={<FAQ />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/auth" element={<Auth />} />
+          <Route path="/portal/dashboard" element={<Dashboard />} />
+          <Route path="/portal/documents" element={<Documents />} />
+          <Route path="/portal/messages" element={<Messages />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
