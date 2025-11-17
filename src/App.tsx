@@ -13,6 +13,8 @@ import NotFound from "./pages/NotFound";
 import Dashboard from "./pages/portal/Dashboard";
 import Documents from "./pages/portal/Documents";
 import Messages from "./pages/portal/Messages";
+import ChexSystems from "./pages/ChexSystems";
+import Payments from "./pages/Payments";
 
 const queryClient = new QueryClient();
 
@@ -28,6 +30,8 @@ const App = () => (
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/faq" element={<FAQ />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/chexsystems" element={<ChexSystems />} />
+          <Route path="/payments" element={<Payments />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/portal/dashboard" element={<Dashboard />} />
           <Route path="/portal/documents" element={<Documents />} />

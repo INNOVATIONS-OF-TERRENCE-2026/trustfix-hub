@@ -9,53 +9,53 @@ import { CheckCircle2, Star } from "lucide-react";
 export default function Pricing() {
   const plans = [
     {
-      name: "Basic",
-      price: 500,
-      description: "Perfect for targeted credit repair",
+      name: "Starter",
+      price: 40,
+      description: "Get started with just $40 down",
       features: [
-        "Up to 5 items removed",
-        "48-hour guarantee",
+        "4-day guaranteed removal",
+        "Up to 5 negative items",
         "Encrypted document storage",
         "Email support",
         "FCRA-compliant disputes",
         "Progress tracking"
       ],
-      popular: false
+      popular: false,
+      badge: "$40 Down"
     },
     {
-      name: "Premium",
-      price: 750,
-      description: "Most popular comprehensive solution",
+      name: "ChexSystems",
+      price: 400,
+      description: "Complete ChexSystems removal in 24 hours",
       features: [
-        "Unlimited items removed",
-        "48-hour guarantee",
-        "Encrypted document storage",
-        "Priority email & phone support",
-        "FCRA-compliant disputes",
-        "Real-time progress tracking",
-        "Personalized strategy",
-        "Credit score monitoring"
+        "24-hour guaranteed removal",
+        "Full ChexSystems report deletion",
+        "Bank account access restored",
+        "Priority support",
+        "Expert case management",
+        "Money-back guarantee"
       ],
-      popular: true
+      popular: false,
+      badge: "24-Hour"
     },
     {
-      name: "Enterprise",
-      price: 2250,
-      description: "Complete credit restoration package",
+      name: "Unlimited",
+      price: 999,
+      description: "Remove unlimited negative items",
       features: [
         "Unlimited items removed",
-        "48-hour guarantee",
+        "4-day guarantee per batch",
         "Encrypted document storage",
-        "24/7 dedicated support",
+        "VIP 24/7 support",
         "FCRA-compliant disputes",
-        "Real-time progress tracking",
-        "Personalized strategy",
+        "Real-time tracking",
+        "Dedicated agent",
         "Credit score monitoring",
         "Legal consultation",
-        "Credit builder program",
-        "Identity theft protection"
+        "Credit builder program"
       ],
-      popular: false
+      popular: true,
+      badge: "Best Value"
     }
   ];
 
@@ -69,10 +69,10 @@ export default function Pricing() {
           <div className="container">
             <div className="max-w-3xl mx-auto text-center">
               <h1 className="text-4xl md:text-6xl font-display font-bold text-primary-foreground mb-6">
-                Simple, Transparent Pricing
+                Transparent Pricing Plans
               </h1>
               <p className="text-lg text-primary-foreground/90">
-                One-time payment. No subscriptions. 48-hour guarantee on all plans.
+                Start for only $40. 4-Day Guarantee. Money-back promise on all plans.
               </p>
             </div>
           </div>

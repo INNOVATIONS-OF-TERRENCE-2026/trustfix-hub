@@ -35,26 +35,47 @@ export default function Home() {
             </Badge>
             
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-display font-bold text-primary-foreground mb-6 leading-tight">
-              48-Hour Credit Repair Guarantee —{" "}
+              4-Day Guaranteed Results —{" "}
               <span className="text-gradient-gold">Or Your Money Back</span>
             </h1>
             
             <p className="text-lg md:text-xl text-primary-foreground/90 mb-8 max-w-2xl mx-auto">
-              Fast, FCRA-compliant removals for Collections • Evictions • Repossessions • Hard Inquiries
+              Remove Collections • Evictions • Repossessions • Hard Inquiries • Student Loans • ChexSystems
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
               <Button size="lg" asChild className="shadow-gold text-lg px-8">
                 <Link to="/auth">
-                  Start Today — Secure & Encrypted
+                  Start For Only $40 Down
                   <Lock className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
-              <Button size="lg" variant="outline" asChild className="bg-white/10 backdrop-blur border-white/20 text-primary-foreground hover:bg-white/20">
-                <Link to="/services">
-                  Learn How It Works
+              <Button size="lg" asChild variant="outline" className="bg-white/10 backdrop-blur border-white/20 text-primary-foreground hover:bg-white/20">
+                <Link to="/chexsystems">
+                  24-Hour ChexSystems Removal
                 </Link>
               </Button>
+            </div>
+            
+            {/* Payment Providers */}
+            <div className="mb-8">
+              <p className="text-sm text-primary-foreground/70 mb-3">Payment Plans Available Through:</p>
+              <div className="flex flex-wrap items-center justify-center gap-6">
+                <span className="text-primary-foreground/90 font-semibold">Afterpay</span>
+                <span className="text-primary-foreground/90 font-semibold">Affirm</span>
+                <span className="text-primary-foreground/90 font-semibold">Klarna</span>
+                <span className="text-primary-foreground/90 font-semibold">Zip</span>
+              </div>
+            </div>
+            
+            {/* Bank Logos */}
+            <div className="mb-8">
+              <p className="text-sm text-primary-foreground/70 mb-3">Trusted by Clients at:</p>
+              <div className="flex flex-wrap items-center justify-center gap-6">
+                <span className="text-primary-foreground/90 font-semibold">Navy Federal</span>
+                <span className="text-primary-foreground/90 font-semibold">Chase</span>
+                <span className="text-primary-foreground/90 font-semibold">Bank of America</span>
+              </div>
             </div>
             
             <div className="mt-12 flex items-center justify-center gap-8 text-primary-foreground/80 text-sm">
@@ -83,11 +104,11 @@ export default function Home() {
               What We Remove
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Comprehensive credit repair services backed by our 48-hour guarantee
+              Comprehensive credit repair services backed by our 4-day guarantee
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
               {
                 icon: TrendingUp,
@@ -108,6 +129,16 @@ export default function Home() {
                 icon: FileText,
                 title: "Hard Inquiries",
                 description: "Remove unauthorized credit inquiries"
+              },
+              {
+                icon: FileCheck,
+                title: "Student Loans",
+                description: "Challenge inaccurate student loan reporting"
+              },
+              {
+                icon: Shield,
+                title: "ChexSystems",
+                description: "24-hour removal to restore banking access"
               }
             ].map((service, index) => (
               <Card key={index} className="glass-card hover:shadow-elegant transition-all duration-300 border-accent/20">
