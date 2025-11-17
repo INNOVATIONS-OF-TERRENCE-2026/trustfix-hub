@@ -22,6 +22,8 @@ const DOCUMENT_TYPES = [
   { value: "payoff_letter", label: "Payoff Letter" }
 ];
 
+import { LucyAiButton } from "@/components/LucyAiButton";
+
 export default function Documents() {
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -237,6 +239,7 @@ export default function Documents() {
         </div>
       </main>
       <Footer />
+      <LucyAiButton />
     </div>
   );
 }

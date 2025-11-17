@@ -9,6 +9,8 @@ import { useToast } from "@/hooks/use-toast";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 
+import { LucyAiButton } from "@/components/LucyAiButton";
+
 export default function Messages() {
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -179,6 +181,7 @@ export default function Messages() {
         </Card>
       </main>
       <Footer />
+      <LucyAiButton />
     </div>
   );
 }

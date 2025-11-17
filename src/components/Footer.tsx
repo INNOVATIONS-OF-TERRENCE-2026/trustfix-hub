@@ -14,10 +14,11 @@ export const Footer = () => {
               </span>
             </Link>
             <p className="text-sm text-muted-foreground mb-4">
-              Fast, FCRA-compliant credit repair with a 48-hour guarantee.
+              Fast, FCRA-compliant credit repair with guaranteed results.
             </p>
-            <p className="text-xs text-muted-foreground">
-              Platform engineered by Terrence Milliner Sr.
+            <p className="text-xs text-muted-foreground italic border-l-2 border-accent/50 pl-3">
+              Developed by <span className="font-semibold text-accent">Terrence Milliner Sr.</span><br />
+              Lead Software Engineer & AI Systems Architect
             </p>
           </div>
 

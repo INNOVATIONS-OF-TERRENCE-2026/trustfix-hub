@@ -9,6 +9,8 @@ import { useToast } from "@/hooks/use-toast";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 
+import { LucyAiButton } from "@/components/LucyAiButton";
+
 export default function Dashboard() {
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -17,6 +19,32 @@ export default function Dashboard() {
   const [caseData, setCaseData] = useState<any>(null);
   const [documents, setDocuments] = useState<any[]>([]);
   const [messages, setMessages] = useState<any[]>([]);
+  const [timeRemaining, setTimeRemaining] = useState<string>("");
+
+  useEffect(() => {
+    checkAuth();
+  }, []);
+
+  useEffect(() => {
+    if (caseData?.sla_deadline) {
+      const interval = setInterval(() => {
+        const now = new Date().getTime();
+        const deadline = new Date(caseData.sla_deadline).getTime();
+        const distance = deadline - now;
+
+        if (distance < 0) {
+          setTimeRemaining("EXPIRED");
+          clearInterval(interval);
+        } else {
+          const hours = Math.floor(distance / (1000 * 60 * 60));
+          const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+          setTimeRemaining(`${hours}h ${minutes}m`);
+        }
+      }, 1000);
+
+      return () => clearInterval(interval);
+    }
+  }, [caseData]);
 
   useEffect(() => {
     checkAuth();
@@ -111,16 +139,25 @@ export default function Dashboard() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Clock className="h-5 w-5" />
-                48-Hour Guarantee
+                SLA Timer
               </CardTitle>
             </CardHeader>
             <CardContent>
-              {caseData?.guarantee_deadline ? (
+              {caseData?.sla_deadline ? (
                 <div className="space-y-2">
-                  <p className="text-2xl font-bold">
-                    {Math.ceil((new Date(caseData.guarantee_deadline).getTime() - Date.now()) / (1000 * 60 * 60))}h
+                  <p className={`text-3xl font-bold ${
+                    timeRemaining === "EXPIRED" ? "text-destructive" : "text-accent"
+                  }`}>
+                    {timeRemaining}
                   </p>
-                  <p className="text-sm text-muted-foreground">Hours remaining</p>
+                  <p className="text-sm text-muted-foreground">
+                    {timeRemaining === "EXPIRED" ? "SLA deadline has passed" : "Time remaining"}
+                  </p>
+                  {timeRemaining === "EXPIRED" && (
+                    <p className="text-sm text-destructive font-semibold">
+                      Refund eligible - Contact support
+                    </p>
+                  )}
                 </div>
               ) : (
                 <p className="text-sm text-muted-foreground">Not started</p>
@@ -196,6 +233,7 @@ export default function Dashboard() {
         </div>
       </main>
       <Footer />
+      <LucyAiButton />
     </div>
   );
 }
