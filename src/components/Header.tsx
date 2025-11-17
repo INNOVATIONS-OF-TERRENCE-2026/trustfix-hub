@@ -1,8 +1,36 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Shield } from "lucide-react";
+import { Shield, LogOut, User } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
+import { useEffect, useState } from "react";
 
 export const Header = () => {
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    toast({
+      title: "Logged out",
+      description: "You've been successfully logged out."
+    });
+    navigate("/");
+  };
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between">
@@ -26,14 +54,30 @@ export const Header = () => {
           <Link to="/faq" className="text-foreground/80 hover:text-foreground transition-colors">
             FAQ
           </Link>
-          <Link to="/auth" className="text-foreground/80 hover:text-foreground transition-colors">
-            Login
-          </Link>
+          {user ? (
+            <Link to="/portal/dashboard" className="text-foreground/80 hover:text-foreground transition-colors flex items-center gap-1">
+              <User className="h-4 w-4" />
+              Portal
+            </Link>
+          ) : (
+            <Link to="/auth" className="text-foreground/80 hover:text-foreground transition-colors">
+              Login
+            </Link>
+          )}
         </nav>
 
-        <Button asChild className="shadow-gold">
-          <Link to="/auth">Start My Repair</Link>
-        </Button>
+        <div className="flex items-center gap-2">
+          {user ? (
+            <Button onClick={handleLogout} variant="outline" size="sm">
+              <LogOut className="h-4 w-4 mr-2" />
+              Logout
+            </Button>
+          ) : (
+            <Button asChild className="shadow-gold">
+              <Link to="/auth">Start My Repair</Link>
+            </Button>
+          )}
+        </div>
       </div>
     </header>
   );

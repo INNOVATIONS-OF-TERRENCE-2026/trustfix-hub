@@ -37,7 +37,7 @@ export default function Auth() {
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session?.user) {
         setUser(session.user);
-        navigate("/");
+        navigate("/portal/dashboard");
       }
     });
 
@@ -45,7 +45,7 @@ export default function Auth() {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       if (session?.user) {
         setUser(session.user);
-        navigate("/");
+        navigate("/portal/dashboard");
       }
     });
 
@@ -69,7 +69,7 @@ export default function Auth() {
         description: "You've been successfully logged in.",
       });
 
-      navigate("/");
+      navigate("/portal/dashboard");
     } catch (error: any) {
       toast({
         title: "Login failed",
@@ -134,7 +134,7 @@ export default function Auth() {
           description: "Welcome to DeWayne's Credit Repair & Solutions.",
         });
 
-        navigate("/");
+        navigate("/portal/dashboard");
       }
     } catch (error: any) {
       toast({
