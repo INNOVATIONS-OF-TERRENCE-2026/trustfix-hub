@@ -14,10 +14,47 @@ export type Database = {
   }
   public: {
     Tables: {
+      audit_logs: {
+        Row: {
+          action: string
+          created_at: string | null
+          details: Json | null
+          id: string
+          ip_address: string | null
+          resource_id: string | null
+          resource_type: string
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string | null
+          details?: Json | null
+          id?: string
+          ip_address?: string | null
+          resource_id?: string | null
+          resource_type: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string | null
+          details?: Json | null
+          id?: string
+          ip_address?: string | null
+          resource_id?: string | null
+          resource_type?: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       cases: {
         Row: {
           admin_notes: string[] | null
           assigned_agent_id: string | null
+          auto_refund_eligible: boolean | null
           completed_at: string | null
           created_at: string
           current_stage: Database["public"]["Enums"]["case_stage"] | null
@@ -26,6 +63,10 @@ export type Database = {
           id: string
           notes: Json | null
           refund_processed: boolean | null
+          sla_deadline: string | null
+          sla_hours: number | null
+          sla_pause_reason: string | null
+          sla_paused: boolean | null
           started_at: string | null
           status: Database["public"]["Enums"]["case_status"]
           updated_at: string
@@ -34,6 +75,7 @@ export type Database = {
         Insert: {
           admin_notes?: string[] | null
           assigned_agent_id?: string | null
+          auto_refund_eligible?: boolean | null
           completed_at?: string | null
           created_at?: string
           current_stage?: Database["public"]["Enums"]["case_stage"] | null
@@ -42,6 +84,10 @@ export type Database = {
           id?: string
           notes?: Json | null
           refund_processed?: boolean | null
+          sla_deadline?: string | null
+          sla_hours?: number | null
+          sla_pause_reason?: string | null
+          sla_paused?: boolean | null
           started_at?: string | null
           status?: Database["public"]["Enums"]["case_status"]
           updated_at?: string
@@ -50,6 +96,7 @@ export type Database = {
         Update: {
           admin_notes?: string[] | null
           assigned_agent_id?: string | null
+          auto_refund_eligible?: boolean | null
           completed_at?: string | null
           created_at?: string
           current_stage?: Database["public"]["Enums"]["case_stage"] | null
@@ -58,6 +105,10 @@ export type Database = {
           id?: string
           notes?: Json | null
           refund_processed?: boolean | null
+          sla_deadline?: string | null
+          sla_hours?: number | null
+          sla_pause_reason?: string | null
+          sla_paused?: boolean | null
           started_at?: string | null
           status?: Database["public"]["Enums"]["case_status"]
           updated_at?: string
@@ -409,6 +460,48 @@ export type Database = {
           twofa_enabled?: boolean | null
           updated_at?: string
           verified_at?: string | null
+        }
+        Relationships: []
+      }
+      service_subscriptions: {
+        Row: {
+          created_at: string | null
+          expires_at: string | null
+          id: string
+          payment_provider: string | null
+          payment_reference: string | null
+          price_paid: number
+          service_type: string
+          started_at: string | null
+          status: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string
+          payment_provider?: string | null
+          payment_reference?: string | null
+          price_paid: number
+          service_type: string
+          started_at?: string | null
+          status?: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string
+          payment_provider?: string | null
+          payment_reference?: string | null
+          price_paid?: number
+          service_type?: string
+          started_at?: string | null
+          status?: string
+          updated_at?: string | null
+          user_id?: string
         }
         Relationships: []
       }
