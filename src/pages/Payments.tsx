@@ -5,8 +5,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { CheckCircle } from "lucide-react";
+import { CheckCircle, CreditCard, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 const SERVICE_PLANS = [
   {
@@ -34,25 +35,54 @@ const SERVICE_PLANS = [
 
 export default function Payments() {
   const [selectedPlan, setSelectedPlan] = useState<string>("");
-  const [selectedPayment, setSelectedPayment] = useState<string>("");
+  const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
-  const handlePayment = () => {
-    if (!selectedPlan || !selectedPayment) {
+  const handlePayment = async () => {
+    if (!selectedPlan) {
       toast({
         title: "Selection Required",
-        description: "Please select both a service plan and payment method",
+        description: "Please select a service plan",
         variant: "destructive"
       });
       return;
     }
 
-    toast({
-      title: "Payment Processing",
-      description: "Redirecting to payment provider..."
-    });
+    setLoading(true);
 
-    // TODO: Integrate with actual payment providers
+    try {
+      const planDetails = SERVICE_PLANS.find(p => p.id === selectedPlan);
+      if (!planDetails) {
+        throw new Error("Invalid plan selected");
+      }
+
+      const { data, error } = await supabase.functions.invoke("create-checkout-session", {
+        body: {
+          priceAmount: planDetails.price,
+          serviceName: planDetails.name,
+          planType: planDetails.id,
+        },
+      });
+
+      if (error) throw error;
+
+      if (data?.url) {
+        window.open(data.url, '_blank');
+        toast({
+          title: "Redirecting to Stripe Checkout",
+          description: "Opening secure payment window...",
+        });
+      }
+    } catch (error) {
+      console.error("Payment error:", error);
+      toast({
+        title: "Payment Error",
+        description: "Failed to initialize payment. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   const selectedPlanDetails = SERVICE_PLANS.find(p => p.id === selectedPlan);
@@ -107,80 +137,62 @@ export default function Payments() {
               </CardContent>
             </Card>
 
-            {/* Payment Method */}
+            {/* Payment Summary & Checkout */}
             <Card>
               <CardHeader>
-                <CardTitle>Payment Method</CardTitle>
-                <CardDescription>Choose how you'd like to pay</CardDescription>
+                <CardTitle>Payment Summary</CardTitle>
+                <CardDescription>Review your selection and checkout securely</CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
-                <RadioGroup value={selectedPayment} onValueChange={setSelectedPayment}>
-                  <div className="space-y-4">
-                    <Label
-                      htmlFor="affirm"
-                      className={`flex items-center space-x-3 p-4 rounded-lg border-2 cursor-pointer transition-all hover:border-accent/50 ${
-                        selectedPayment === "affirm" ? "border-accent bg-accent/5" : "border-border"
-                      }`}
-                    >
-                      <RadioGroupItem value="affirm" id="affirm" />
-                      <div className="flex-1">
-                        <div className="font-semibold">Affirm</div>
-                        <div className="text-sm text-muted-foreground">
-                          Pay over time with 0% APR financing
-                        </div>
-                      </div>
-                    </Label>
-
-                    <Label
-                      htmlFor="afterpay"
-                      className={`flex items-center space-x-3 p-4 rounded-lg border-2 cursor-pointer transition-all hover:border-accent/50 ${
-                        selectedPayment === "afterpay" ? "border-accent bg-accent/5" : "border-border"
-                      }`}
-                    >
-                      <RadioGroupItem value="afterpay" id="afterpay" />
-                      <div className="flex-1">
-                        <div className="font-semibold">Afterpay</div>
-                        <div className="text-sm text-muted-foreground">
-                          Split into 4 interest-free payments
-                        </div>
-                      </div>
-                    </Label>
-
-                    <Label
-                      htmlFor="zip"
-                      className={`flex items-center space-x-3 p-4 rounded-lg border-2 cursor-pointer transition-all hover:border-accent/50 ${
-                        selectedPayment === "zip" ? "border-accent bg-accent/5" : "border-border"
-                      }`}
-                    >
-                      <RadioGroupItem value="zip" id="zip" />
-                      <div className="flex-1">
-                        <div className="font-semibold">Zip</div>
-                        <div className="text-sm text-muted-foreground">
-                          Flexible payment plans available
-                        </div>
-                      </div>
-                    </Label>
-                  </div>
-                </RadioGroup>
-
                 {selectedPlanDetails && (
-                  <div className="mt-6 p-4 rounded-lg bg-muted">
-                    <div className="text-sm text-muted-foreground mb-2">Total Amount</div>
-                    <div className="text-3xl font-bold text-accent">${selectedPlanDetails.price}</div>
+                  <div className="space-y-4">
+                    <div className="p-4 rounded-lg bg-muted/50 border border-border">
+                      <div className="text-sm text-muted-foreground mb-1">Selected Plan</div>
+                      <div className="text-xl font-bold text-foreground">{selectedPlanDetails.name}</div>
+                      <div className="text-3xl font-bold text-accent mt-2">${selectedPlanDetails.price}</div>
+                    </div>
+
+                    <div className="p-4 rounded-lg border border-accent/20 bg-accent/5">
+                      <div className="flex items-start gap-3 mb-3">
+                        <CreditCard className="h-5 w-5 text-accent mt-0.5" />
+                        <div>
+                          <p className="font-semibold text-foreground">Multiple Payment Options</p>
+                          <p className="text-sm text-muted-foreground mt-1">
+                            Pay with card or choose Buy Now, Pay Later options
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex flex-wrap gap-2 mt-3">
+                        <span className="text-xs px-2 py-1 rounded bg-background border border-border">Credit Card</span>
+                        <span className="text-xs px-2 py-1 rounded bg-background border border-border">Affirm</span>
+                        <span className="text-xs px-2 py-1 rounded bg-background border border-border">Afterpay</span>
+                        <span className="text-xs px-2 py-1 rounded bg-background border border-border">Klarna</span>
+                      </div>
+                    </div>
                   </div>
                 )}
 
                 <Button
                   onClick={handlePayment}
-                  disabled={!selectedPlan || !selectedPayment}
+                  disabled={!selectedPlan || loading}
                   className="w-full shadow-gold"
                   size="lg"
                 >
-                  Continue to Payment
+                  {loading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Processing...
+                    </>
+                  ) : (
+                    <>
+                      Continue to Secure Checkout
+                      <CreditCard className="ml-2 h-4 w-4" />
+                    </>
+                  )}
                 </Button>
 
                 <p className="text-xs text-center text-muted-foreground">
-                  Secure payment processing. Your information is encrypted and protected.
+                  🔒 Secure payment processing powered by Stripe. Your information is encrypted and protected.
                 </p>
               </CardContent>
             </Card>
