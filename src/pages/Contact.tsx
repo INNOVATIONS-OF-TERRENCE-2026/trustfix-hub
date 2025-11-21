@@ -132,7 +132,7 @@ export default function Contact() {
                       </div>
                       <div>
                         <h3 className="font-semibold text-foreground mb-1">Email Us</h3>
-                        <p className="text-muted-foreground">support@dewaynescreditrepair.com</p>
+                        <p className="text-muted-foreground">Darrellcunningham20@gmail.com</p>
                       </div>
                     </div>
                   </CardContent>
@@ -146,8 +146,8 @@ export default function Contact() {
                       </div>
                       <div>
                         <h3 className="font-semibold text-foreground mb-1">Call Us</h3>
-                        <p className="text-muted-foreground">1-800-CREDIT-FIX</p>
-                        <p className="text-sm text-muted-foreground mt-1">Mon-Fri: 9AM-6PM EST</p>
+                        <p className="text-muted-foreground">(469) 877-2300</p>
+                        <p className="text-sm text-muted-foreground mt-1">Mon-Fri: 9AM-6PM CST</p>
                       </div>
                     </div>
                   </CardContent>
@@ -162,9 +162,9 @@ export default function Contact() {
                       <div>
                         <h3 className="font-semibold text-foreground mb-1">Visit Us</h3>
                         <p className="text-muted-foreground">
-                          123 Credit Repair Lane<br />
-                          Financial District<br />
-                          New York, NY 10004
+                          2003 Linda Ln<br />
+                          Richardson, TX 75081<br />
+                          United States
                         </p>
                       </div>
                     </div>

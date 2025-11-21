@@ -15,6 +15,11 @@ import Documents from "./pages/portal/Documents";
 import Messages from "./pages/portal/Messages";
 import ChexSystems from "./pages/ChexSystems";
 import Payments from "./pages/Payments";
+import Success from "./pages/Success";
+import Cancel from "./pages/Cancel";
+import Terms from "./pages/Terms";
+import Privacy from "./pages/Privacy";
+import Guarantee from "./pages/Guarantee";
 
 const queryClient = new QueryClient();
 
@@ -36,6 +41,11 @@ const App = () => (
           <Route path="/portal/dashboard" element={<Dashboard />} />
           <Route path="/portal/documents" element={<Documents />} />
           <Route path="/portal/messages" element={<Messages />} />
+          <Route path="/success" element={<Success />} />
+          <Route path="/cancel" element={<Cancel />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/guarantee" element={<Guarantee />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
