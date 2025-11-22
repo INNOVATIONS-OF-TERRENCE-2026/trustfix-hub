@@ -11,7 +11,7 @@ export default function Pricing() {
     {
       name: "Starter",
       price: 40,
-      description: "Get started with just $40 down",
+      description: "Get started with BNPL — down payment as low as $50",
       features: [
         "4-day guaranteed removal",
         "Up to 5 negative items",
@@ -72,7 +72,7 @@ export default function Pricing() {
                 Transparent Pricing Plans
               </h1>
               <p className="text-lg text-primary-foreground/90">
-                Start for only $40. 4-Day Guarantee. Money-back promise on all plans.
+                Start with BNPL options available. 4-Day Guarantee. Money-back promise on all plans.
               </p>
             </div>
           </div>
@@ -129,12 +129,12 @@ export default function Pricing() {
               <Card className="glass-card border-accent/20">
                 <CardHeader>
                   <CardTitle className="text-center text-2xl font-display">
-                    Our 48-Hour Guarantee
+                    Our 4-Day Guaranteed Results
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="text-center">
                   <p className="text-muted-foreground mb-4">
-                    We guarantee verified results within 48 hours of receiving your complete documentation, 
+                    We guarantee verified results within 4 days of receiving your complete documentation, 
                     or you receive a full refund. No questions asked.
                   </p>
                   <Button variant="outline" asChild>

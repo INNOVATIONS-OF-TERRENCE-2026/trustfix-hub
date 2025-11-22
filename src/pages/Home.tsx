@@ -44,9 +44,9 @@ export default function Home() {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-              <Button size="lg" asChild className="shadow-gold text-lg px-8">
+            <Button size="lg" asChild className="shadow-gold text-lg px-8">
                 <Link to="/auth">
-                  Start For Only $40 Down
+                  We accept BNPL payments — start today with a down payment as low as $50.
                   <Lock className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
@@ -179,14 +179,14 @@ export default function Home() {
               {
                 step: "2",
                 icon: Clock,
-                title: "48-Hour Work",
+                title: "4-Day Guaranteed Results",
                 description: "Our team begins work immediately with FCRA-compliant dispute letters"
               },
               {
                 step: "3",
                 icon: CheckCircle2,
                 title: "Results Delivered",
-                description: "Get verified results within 48 hours or receive a full refund"
+                description: "Get verified results within 4 days or receive a full refund"
               }
             ].map((step, index) => (
               <div key={index} className="relative text-center">
@@ -221,7 +221,7 @@ export default function Home() {
             {[
               {
                 name: "Sarah M.",
-                text: "Removed 3 collections in 48 hours. My score jumped 87 points!",
+                text: "Removed 3 collections in 4 days. My score jumped 87 points!",
                 rating: 5
               },
               {
@@ -231,7 +231,7 @@ export default function Home() {
               },
               {
                 name: "Maria L.",
-                text: "The 48-hour guarantee is real. Best credit repair service!",
+                text: "The 4-Day Guaranteed Results is real. Best credit repair service!",
                 rating: 5
               }
             ].map((testimonial, index) => (

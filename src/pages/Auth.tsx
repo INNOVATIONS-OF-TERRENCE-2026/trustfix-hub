@@ -164,7 +164,7 @@ export default function Auth() {
               <CardDescription>
                 {isLogin 
                   ? "Login to access your credit repair dashboard" 
-                  : "Start your 48-hour guaranteed credit repair journey"}
+                  : "Start your 4-day guaranteed credit repair journey"}
               </CardDescription>
             </CardHeader>
             <CardContent>

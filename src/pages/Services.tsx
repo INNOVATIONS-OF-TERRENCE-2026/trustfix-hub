@@ -66,7 +66,7 @@ export default function Services() {
                 Our Credit Repair Services
               </h1>
               <p className="text-lg text-primary-foreground/90">
-                Comprehensive FCRA-compliant solutions backed by our 48-hour guarantee
+                Comprehensive FCRA-compliant solutions backed by our 4-day guarantee
               </p>
             </div>
           </div>

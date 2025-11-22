@@ -11,19 +11,19 @@ export default function FAQ() {
   const faqs = [
     {
       question: "What documents do I need to upload?",
-      answer: "You'll need to upload: Front & back of your Driver's License or State ID, Social Security Card (photo is fine), and the signed authorization form we generate for you. You may also add optional documents like payoff letters or creditor statements."
+      answer: "You'll need to upload: Front & back of your Driver's License or State ID (must be in black & white), Social Security Card (photo is fine)."
     },
     {
       question: "How do I take good photos of my ID?",
       answer: "Lay your ID flat on a solid surface with good lighting. Avoid glare by adjusting your angle. Make sure the entire document is in frame without cropping any edges. Use the camera option in our Upload Documents section for best results."
     },
     {
-      question: "When does the 48-hour timer start?",
+      question: "When does the 4-day timer start?",
       answer: "The guarantee timer starts once we verify your payment and all required documents (ID, Social Security Card, and signed authorization) are uploaded and pass our verification process."
     },
     {
-      question: "What happens if you miss the 48 hours?",
-      answer: "If we don't complete your case within 48 hours, the Guarantee Triggered workflow opens automatically and a refund request is created. You'll be notified immediately via email and SMS, and your refund will be processed within 48 hours."
+      question: "What happens if you miss the 4 days?",
+      answer: "If we don't complete your case within 4 days, the Guarantee Triggered workflow opens automatically and a refund request is created. You'll be notified immediately via email and SMS, and your refund will be processed within 48 hours."
     },
     {
       question: "Do you store my Social Security Number?",
@@ -43,7 +43,7 @@ export default function FAQ() {
     },
     {
       question: "How does the refund process work?",
-      answer: "If we don't meet our 48-hour guarantee, a refund request is automatically created. Our admin team reviews and processes the refund within 48 hours. You'll receive confirmation via email once the refund is issued to your original payment method."
+      answer: "If we don't meet our 4-day guarantee, a refund request is automatically created. Our admin team reviews and processes the refund within 48 hours. You'll receive confirmation via email once the refund is issued to your original payment method."
     },
     {
       question: "Can I track my case progress?",
@@ -55,7 +55,7 @@ export default function FAQ() {
     },
     {
       question: "What makes your service different?",
-      answer: "Our 48-hour guarantee is unique in the industry. We combine FCRA-compliant dispute processes with automated workflows and encrypted document handling to deliver fast, secure, and reliable results—or your money back."
+      answer: "Our 4-Day Guaranteed Results is unique in the industry. We combine FCRA-compliant dispute processes with automated workflows and encrypted document handling to deliver fast, secure, and reliable results—or your money back."
     }
   ];
 
