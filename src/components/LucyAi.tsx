@@ -3,8 +3,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Bot, Send, X, Sparkles } from "lucide-react";
+import { Send, X, Sparkles } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+import lucyLogo from "@/assets/lucy-logo.png";
 
 interface Message {
   role: "user" | "assistant";
@@ -20,7 +22,7 @@ export const LucyAi = ({ isOpen, onClose }: LucyAiProps) => {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
-      content: "Hi! I'm Lucy, your AI credit repair assistant. I can help you with:\n\n• Understanding your credit repair process\n• Uploading documents\n• Checking case status\n• Credit education\n• Answering FAQs\n\nHow can I assist you today?"
+      content: "Hi! I'm Lucy, your assistant. How can I help you today?"
     }
   ]);
   const [input, setInput] = useState("");
@@ -43,20 +45,22 @@ export const LucyAi = ({ isOpen, onClose }: LucyAiProps) => {
     setIsLoading(true);
 
     try {
-      // TODO: Integrate with Lucy AI backend
-      // For now, using a simple mock response
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
+      const { data, error } = await supabase.functions.invoke('lucy-chat', {
+        body: { messages: [...messages, userMessage] }
+      });
+
+      if (error) throw error;
+
       const assistantMessage: Message = {
         role: "assistant",
-        content: "I'm here to help! This is a demo response. Full Lucy AI integration coming soon with:\n\n• Real-time credit advice\n• Document upload guidance\n• Case status updates\n• Personalized recommendations"
+        content: data.content || "I apologize, but I'm having trouble responding right now. Please try again."
       };
       
       setMessages(prev => [...prev, assistantMessage]);
     } catch (error: any) {
       toast({
         title: "Error",
-        description: error.message,
+        description: error.message || "Failed to get response from Lucy",
         variant: "destructive"
       });
     } finally {
@@ -72,17 +76,19 @@ export const LucyAi = ({ isOpen, onClose }: LucyAiProps) => {
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4 bg-gradient-to-r from-accent/10 to-accent/5 border-b">
           <div className="flex items-center gap-3">
             <div className="relative">
-              <div className="w-10 h-10 rounded-full bg-accent flex items-center justify-center animate-pulse">
-                <Bot className="h-6 w-6 text-primary-foreground" />
-              </div>
+              <img 
+                src={lucyLogo} 
+                alt="Lucy AI" 
+                className="w-10 h-10 rounded-full object-cover border-2 border-accent"
+              />
               <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-background" />
             </div>
             <div>
               <CardTitle className="flex items-center gap-2">
-                Lucy AI
+                Lucy AI Assistant
                 <Sparkles className="h-4 w-4 text-accent" />
               </CardTitle>
-              <p className="text-xs text-muted-foreground">Your Credit Repair Assistant</p>
+              <p className="text-xs text-muted-foreground">Engineered by Terrence Milliner Sr.</p>
             </div>
           </div>
           <Button
