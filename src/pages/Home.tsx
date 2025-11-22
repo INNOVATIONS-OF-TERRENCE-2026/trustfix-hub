@@ -46,7 +46,7 @@ export default function Home() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
             <Button size="lg" asChild className="shadow-gold text-lg px-8">
                 <Link to="/auth">
-                  We accept BNPL payments — start today with a down payment as low as $50.
+                  Start today for as low as $50 with BNPL.
                   <Lock className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
