@@ -47,7 +47,7 @@ export default function Results() {
         {/* Results Gallery */}
         <section className="py-20 bg-background">
           <div className="container">
-            <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 max-w-7xl mx-auto">
               {results.map((result, index) => (
                 <div 
                   key={index} 
@@ -56,7 +56,7 @@ export default function Results() {
                   <img 
                     src={result.image} 
                     alt={result.alt}
-                    className="w-full h-auto object-cover"
+                    className="w-full h-auto object-contain max-h-[600px]"
                     loading="lazy"
                   />
                 </div>

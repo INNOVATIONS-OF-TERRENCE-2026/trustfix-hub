@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { TestimonialsCarousel } from "@/components/TestimonialsCarousel";
+import { ResultsPreviewCard } from "@/components/ResultsPreviewCard";
 import { 
   Shield, 
   Clock, 
@@ -17,10 +18,6 @@ import {
   FileText,
   Home as HomeIcon
 } from "lucide-react";
-import promo4Day from "@/assets/results/promo-4day.png";
-import promoChex from "@/assets/results/promo-chexsystems.png";
-import creditScore from "@/assets/results/credit-score-769.jpg";
-import testimonial from "@/assets/results/client-testimonial.png";
 
 export default function Home() {
   return (
@@ -213,49 +210,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Results Gallery */}
-      <section className="py-20 bg-card">
-        <div className="container">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-5xl font-display font-bold text-foreground mb-4">
-              Real Client Results
-            </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              See the life-changing results we've delivered for thousands of clients
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto mb-8">
-            {[
-              { image: promo4Day, alt: "4-Day Credit Removal Service" },
-              { image: promoChex, alt: "24-Hour ChexSystems Removal" },
-              { image: creditScore, alt: "Client Experian Credit Score - 769" },
-              { image: testimonial, alt: "Client Success Story" }
-            ].map((result, index) => (
-              <div 
-                key={index} 
-                className="glass-card border-accent/20 rounded-lg overflow-hidden hover:shadow-elegant transition-all duration-300"
-              >
-                <img 
-                  src={result.image} 
-                  alt={result.alt}
-                  className="w-full h-auto object-cover"
-                  loading="lazy"
-                />
-              </div>
-            ))}
-          </div>
-
-          <div className="text-center">
-            <Button size="lg" asChild variant="outline">
-              <Link to="/results">
-                View Full Results Gallery
-                <CheckCircle2 className="ml-2 h-5 w-5" />
-              </Link>
-            </Button>
-          </div>
-        </div>
-      </section>
+      {/* Results Preview */}
+      <ResultsPreviewCard />
 
       {/* Testimonials */}
       <section className="py-20 bg-background">
