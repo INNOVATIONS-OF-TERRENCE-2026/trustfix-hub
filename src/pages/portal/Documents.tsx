@@ -13,13 +13,8 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 
 const DOCUMENT_TYPES = [
-  { value: "id_front", label: "ID Front" },
-  { value: "id_back", label: "ID Back" },
-  { value: "ss_card", label: "Social Security Card" },
-  { value: "proof_address", label: "Proof of Address" },
-  { value: "authorization_form", label: "Authorization Form" },
-  { value: "creditor_statement", label: "Creditor Statement" },
-  { value: "payoff_letter", label: "Payoff Letter" }
+  { value: "id_front", label: "Driver's License or Government ID (Front Only)" },
+  { value: "ss_card", label: "Social Security Card (Optional)" }
 ];
 
 import { LucyAiButton } from "@/components/LucyAiButton";
@@ -76,10 +71,28 @@ export default function Documents() {
   };
 
   const handleUpload = async () => {
-    if (!selectedFile || !documentType || !caseId) {
+    if (!selectedFile) {
       toast({
         title: "Error",
-        description: "Please select a file and document type",
+        description: "Please select a file",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    if (!documentType) {
+      toast({
+        title: "Error",
+        description: "Please select a document type",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    if (!caseId) {
+      toast({
+        title: "Error",
+        description: "No active case found. Please contact support.",
         variant: "destructive"
       });
       return;
@@ -160,8 +173,11 @@ export default function Documents() {
                     id="file"
                     type="file"
                     onChange={handleFileSelect}
-                    accept=".pdf,.jpg,.jpeg,.png"
+                    accept=".pdf,.jpg,.jpeg,.png,.doc,.docx,.xls,.xlsx,.csv"
                   />
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Accepted formats: PDF, JPG, PNG, DOC, DOCX, XLS, XLSX, CSV
+                  </p>
                 </div>
 
                 <div className="space-y-2">

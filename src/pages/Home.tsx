@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { TestimonialsCarousel } from "@/components/TestimonialsCarousel";
 import { 
   Shield, 
   Clock, 
@@ -16,6 +17,10 @@ import {
   FileText,
   Home as HomeIcon
 } from "lucide-react";
+import promo4Day from "@/assets/results/promo-4day.png";
+import promoChex from "@/assets/results/promo-chexsystems.png";
+import creditScore from "@/assets/results/credit-score-769.jpg";
+import testimonial from "@/assets/results/client-testimonial.png";
 
 export default function Home() {
   return (
@@ -45,7 +50,7 @@ export default function Home() {
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
             <Button size="lg" asChild className="shadow-gold text-lg px-8">
-                <Link to="/auth">
+                <Link to="/pricing">
                   Start today for as low as $50 with BNPL.
                   <Lock className="ml-2 h-5 w-5" />
                 </Link>
@@ -208,6 +213,50 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Results Gallery */}
+      <section className="py-20 bg-card">
+        <div className="container">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-5xl font-display font-bold text-foreground mb-4">
+              Real Client Results
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              See the life-changing results we've delivered for thousands of clients
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto mb-8">
+            {[
+              { image: promo4Day, alt: "4-Day Credit Removal Service" },
+              { image: promoChex, alt: "24-Hour ChexSystems Removal" },
+              { image: creditScore, alt: "Client Experian Credit Score - 769" },
+              { image: testimonial, alt: "Client Success Story" }
+            ].map((result, index) => (
+              <div 
+                key={index} 
+                className="glass-card border-accent/20 rounded-lg overflow-hidden hover:shadow-elegant transition-all duration-300"
+              >
+                <img 
+                  src={result.image} 
+                  alt={result.alt}
+                  className="w-full h-auto object-cover"
+                  loading="lazy"
+                />
+              </div>
+            ))}
+          </div>
+
+          <div className="text-center">
+            <Button size="lg" asChild variant="outline">
+              <Link to="/results">
+                View Full Results Gallery
+                <CheckCircle2 className="ml-2 h-5 w-5" />
+              </Link>
+            </Button>
+          </div>
+        </div>
+      </section>
+
       {/* Testimonials */}
       <section className="py-20 bg-background">
         <div className="container">
@@ -215,39 +264,10 @@ export default function Home() {
             <h2 className="text-3xl md:text-5xl font-display font-bold text-foreground mb-4">
               Trusted by Thousands
             </h2>
+            <p className="text-lg text-muted-foreground">Real stories from real clients</p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-            {[
-              {
-                name: "Sarah M.",
-                text: "Removed 3 collections in 4 days. My score jumped 87 points!",
-                rating: 5
-              },
-              {
-                name: "James T.",
-                text: "Professional, fast, and results-driven. Highly recommended!",
-                rating: 5
-              },
-              {
-                name: "Maria L.",
-                text: "The 4-Day Guaranteed Results is real. Best credit repair service!",
-                rating: 5
-              }
-            ].map((testimonial, index) => (
-              <Card key={index} className="glass-card border-accent/20">
-                <CardContent className="pt-6">
-                  <div className="flex gap-1 mb-4">
-                    {[...Array(testimonial.rating)].map((_, i) => (
-                      <Star key={i} className="h-5 w-5 fill-accent text-accent" />
-                    ))}
-                  </div>
-                  <p className="text-foreground mb-4">"{testimonial.text}"</p>
-                  <p className="font-semibold text-accent">{testimonial.name}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+          <TestimonialsCarousel />
         </div>
       </section>
 

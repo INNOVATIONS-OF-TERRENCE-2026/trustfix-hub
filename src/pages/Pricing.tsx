@@ -3,61 +3,56 @@ import { Footer } from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Link } from "react-router-dom";
-import { CheckCircle2, Star } from "lucide-react";
+import { CheckCircle2, Star, Loader2 } from "lucide-react";
+import { STRIPE_PRODUCTS } from "@/config/stripeProducts";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
+import { useState } from "react";
 
 export default function Pricing() {
-  const plans = [
-    {
-      name: "Starter",
-      price: 40,
-      description: "Get started with BNPL — down payment as low as $50",
-      features: [
-        "4-day guaranteed removal",
-        "Up to 5 negative items",
-        "Encrypted document storage",
-        "Email support",
-        "FCRA-compliant disputes",
-        "Progress tracking"
-      ],
-      popular: false,
-      badge: "$40 Down"
-    },
-    {
-      name: "ChexSystems",
-      price: 400,
-      description: "Complete ChexSystems removal in 24 hours",
-      features: [
-        "24-hour guaranteed removal",
-        "Full ChexSystems report deletion",
-        "Bank account access restored",
-        "Priority support",
-        "Expert case management",
-        "Money-back guarantee"
-      ],
-      popular: false,
-      badge: "24-Hour"
-    },
-    {
-      name: "Unlimited",
-      price: 999,
-      description: "Remove unlimited negative items",
-      features: [
-        "Unlimited items removed",
-        "4-day guarantee per batch",
-        "Encrypted document storage",
-        "VIP 24/7 support",
-        "FCRA-compliant disputes",
-        "Real-time tracking",
-        "Dedicated agent",
-        "Credit score monitoring",
-        "Legal consultation",
-        "Credit builder program"
-      ],
-      popular: true,
-      badge: "Best Value"
+  const { toast } = useToast();
+  const [loading, setLoading] = useState<string | null>(null);
+
+  const handleCheckout = async (productId: string, priceId: string) => {
+    setLoading(productId);
+    
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!session) {
+        toast({
+          title: "Authentication Required",
+          description: "Please log in to purchase",
+          variant: "destructive"
+        });
+        window.location.href = "/auth";
+        return;
+      }
+
+      const { data, error } = await supabase.functions.invoke('create-checkout-session', {
+        body: {
+          priceId,
+          productId,
+          successUrl: `${window.location.origin}/success`,
+          cancelUrl: `${window.location.origin}/cancel`
+        }
+      });
+
+      if (error) throw error;
+      
+      if (data?.url) {
+        window.open(data.url, '_blank');
+      }
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(null);
     }
-  ];
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -81,11 +76,11 @@ export default function Pricing() {
         {/* Pricing Cards */}
         <section className="py-20 bg-background">
           <div className="container">
-            <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-              {plans.map((plan, index) => (
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
+              {STRIPE_PRODUCTS.map((plan) => (
                 <Card 
-                  key={index} 
-                  className={`glass-card border-accent/20 hover:shadow-elegant transition-all duration-300 relative ${
+                  key={plan.id} 
+                  className={`glass-card border-accent/20 hover:shadow-elegant transition-all duration-300 relative flex flex-col ${
                     plan.popular ? 'ring-2 ring-accent shadow-gold' : ''
                   }`}
                 >
@@ -99,25 +94,33 @@ export default function Pricing() {
                     <CardTitle className="text-2xl font-display mb-2">{plan.name}</CardTitle>
                     <CardDescription>{plan.description}</CardDescription>
                     <div className="mt-4">
-                      <span className="text-4xl font-bold text-foreground">${plan.price}</span>
+                      <span className="text-4xl font-bold text-foreground">{plan.displayPrice}</span>
                       <span className="text-muted-foreground"> one-time</span>
                     </div>
                   </CardHeader>
-                  <CardContent>
-                    <ul className="space-y-3 mb-6">
+                  <CardContent className="flex-1 flex flex-col">
+                    <ul className="space-y-3 mb-6 flex-1">
                       {plan.features.map((feature, idx) => (
                         <li key={idx} className="flex items-start gap-2 text-foreground">
                           <CheckCircle2 className="h-5 w-5 text-accent flex-shrink-0 mt-0.5" />
-                          <span>{feature}</span>
+                          <span className="text-sm">{feature}</span>
                         </li>
                       ))}
                     </ul>
                     <Button 
-                      asChild 
+                      onClick={() => handleCheckout(plan.stripeProductId, plan.stripePriceId)}
+                      disabled={loading === plan.stripeProductId}
                       className={`w-full ${plan.popular ? 'shadow-gold' : ''}`}
                       variant={plan.popular ? 'default' : 'outline'}
                     >
-                      <Link to="/auth">Start {plan.name} Plan</Link>
+                      {loading === plan.stripeProductId ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          Processing...
+                        </>
+                      ) : (
+                        `Get ${plan.name.split(' ')[0]} Plan`
+                      )}
                     </Button>
                   </CardContent>
                 </Card>
@@ -137,8 +140,8 @@ export default function Pricing() {
                     We guarantee verified results within 4 days of receiving your complete documentation, 
                     or you receive a full refund. No questions asked.
                   </p>
-                  <Button variant="outline" asChild>
-                    <Link to="/guarantee">Read Full Guarantee Policy</Link>
+                  <Button variant="outline" onClick={() => window.location.href = '/guarantee'}>
+                    Read Full Guarantee Policy
                   </Button>
                 </CardContent>
               </Card>

@@ -14,6 +14,9 @@ import NotFound from "./pages/NotFound";
 import Dashboard from "./pages/portal/Dashboard";
 import Documents from "./pages/portal/Documents";
 import Messages from "./pages/portal/Messages";
+import Profile from "./pages/portal/Profile";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import ClientDetail from "./pages/admin/ClientDetail";
 import ChexSystems from "./pages/ChexSystems";
 import Payments from "./pages/Payments";
 import Success from "./pages/Success";
@@ -44,12 +47,15 @@ const App = () => (
           <Route path="/portal/dashboard" element={<Dashboard />} />
           <Route path="/portal/documents" element={<Documents />} />
           <Route path="/portal/messages" element={<Messages />} />
+          <Route path="/portal/profile" element={<Profile />} />
           <Route path="/success" element={<Success />} />
           <Route path="/cancel" element={<Cancel />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/guarantee" element={<Guarantee />} />
           <Route path="/results" element={<Results />} />
+          <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          <Route path="/admin/client/:clientId" element={<ClientDetail />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
