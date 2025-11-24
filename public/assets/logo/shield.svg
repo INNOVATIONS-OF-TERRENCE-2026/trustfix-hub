@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <defs>
+    <linearGradient id="shieldGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#D4AF37;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#F4D03F;stop-opacity:1" />
+    </linearGradient>
+    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
+      <feOffset dx="0" dy="2" result="offsetblur"/>
+      <feComponentTransfer>
+        <feFuncA type="linear" slope="0.3"/>
+      </feComponentTransfer>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Shield Shape -->
+  <path d="M100 10 L170 40 L170 100 Q170 160 100 190 Q30 160 30 100 L30 40 Z" 
+        fill="url(#shieldGradient)" 
+        filter="url(#shadow)"
+        stroke="#B8942C" 
+        stroke-width="2"/>
+  
+  <!-- Inner Shield Detail -->
+  <path d="M100 25 L155 47 L155 100 Q155 150 100 175 Q45 150 45 100 L45 47 Z" 
+        fill="none" 
+        stroke="#FFF" 
+        stroke-width="1.5" 
+        opacity="0.3"/>
+  
+  <!-- Check Mark -->
+  <path d="M70 100 L90 120 L130 70" 
+        stroke="#FFF" 
+        stroke-width="8" 
+        stroke-linecap="round" 
+        stroke-linejoin="round" 
+        fill="none"/>
+  
+  <!-- Shine Effect -->
+  <ellipse cx="80" cy="50" rx="20" ry="30" fill="#FFF" opacity="0.2"/>
+</svg>

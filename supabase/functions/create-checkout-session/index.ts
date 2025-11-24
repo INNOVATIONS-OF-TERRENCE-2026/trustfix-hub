@@ -70,7 +70,7 @@ serve(async (req) => {
       ],
       mode: "payment",
       payment_method_types: ["card", "affirm", "afterpay_clearpay", "klarna"],
-      success_url: `${origin}/success?session_id={CHECKOUT_SESSION_ID}`,
+      success_url: `${origin}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/cancel`,
       metadata: {
         plan_type: planType || "basic",
