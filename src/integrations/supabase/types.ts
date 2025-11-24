@@ -14,6 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_notifications: {
+        Row: {
+          admin_user_id: string | null
+          created_at: string | null
+          id: string
+          link: string | null
+          message: string
+          read: boolean | null
+          title: string
+          type: string
+        }
+        Insert: {
+          admin_user_id?: string | null
+          created_at?: string | null
+          id?: string
+          link?: string | null
+          message: string
+          read?: boolean | null
+          title: string
+          type: string
+        }
+        Update: {
+          admin_user_id?: string | null
+          created_at?: string | null
+          id?: string
+          link?: string | null
+          message?: string
+          read?: boolean | null
+          title?: string
+          type?: string
+        }
+        Relationships: []
+      }
       audit_logs: {
         Row: {
           action: string
@@ -62,7 +95,9 @@ export type Database = {
           guarantee_triggered: boolean | null
           id: string
           notes: Json | null
+          payment_id: string | null
           refund_processed: boolean | null
+          service_type: string | null
           sla_deadline: string | null
           sla_hours: number | null
           sla_pause_reason: string | null
@@ -83,7 +118,9 @@ export type Database = {
           guarantee_triggered?: boolean | null
           id?: string
           notes?: Json | null
+          payment_id?: string | null
           refund_processed?: boolean | null
+          service_type?: string | null
           sla_deadline?: string | null
           sla_hours?: number | null
           sla_pause_reason?: string | null
@@ -104,7 +141,9 @@ export type Database = {
           guarantee_triggered?: boolean | null
           id?: string
           notes?: Json | null
+          payment_id?: string | null
           refund_processed?: boolean | null
+          service_type?: string | null
           sla_deadline?: string | null
           sla_hours?: number | null
           sla_pause_reason?: string | null
@@ -114,7 +153,15 @@ export type Database = {
           updated_at?: string
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "cases_payment_id_fkey"
+            columns: ["payment_id"]
+            isOneToOne: false
+            referencedRelation: "payments"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       contact_messages: {
         Row: {
@@ -353,6 +400,8 @@ export type Database = {
           receipt_url: string | null
           refund_processed: boolean | null
           refund_requested: boolean | null
+          stripe_price_id: string | null
+          stripe_product_id: string | null
           user_id: string
         }
         Insert: {
@@ -369,6 +418,8 @@ export type Database = {
           receipt_url?: string | null
           refund_processed?: boolean | null
           refund_requested?: boolean | null
+          stripe_price_id?: string | null
+          stripe_product_id?: string | null
           user_id: string
         }
         Update: {
@@ -385,6 +436,8 @@ export type Database = {
           receipt_url?: string | null
           refund_processed?: boolean | null
           refund_requested?: boolean | null
+          stripe_price_id?: string | null
+          stripe_product_id?: string | null
           user_id?: string
         }
         Relationships: [
@@ -405,6 +458,7 @@ export type Database = {
           dob: string | null
           email_verified: boolean | null
           encryption_key_id: string | null
+          experian_email: string | null
           experian_password_encrypted: string | null
           experian_username: string | null
           full_name: string
@@ -414,6 +468,7 @@ export type Database = {
           phone_verified: boolean | null
           retention_expiry: string | null
           soft_deleted: boolean | null
+          ssn_encrypted: string | null
           ssn_last4: string | null
           twofa_enabled: boolean | null
           updated_at: string
@@ -426,6 +481,7 @@ export type Database = {
           dob?: string | null
           email_verified?: boolean | null
           encryption_key_id?: string | null
+          experian_email?: string | null
           experian_password_encrypted?: string | null
           experian_username?: string | null
           full_name: string
@@ -435,6 +491,7 @@ export type Database = {
           phone_verified?: boolean | null
           retention_expiry?: string | null
           soft_deleted?: boolean | null
+          ssn_encrypted?: string | null
           ssn_last4?: string | null
           twofa_enabled?: boolean | null
           updated_at?: string
@@ -447,6 +504,7 @@ export type Database = {
           dob?: string | null
           email_verified?: boolean | null
           encryption_key_id?: string | null
+          experian_email?: string | null
           experian_password_encrypted?: string | null
           experian_username?: string | null
           full_name?: string
@@ -456,6 +514,7 @@ export type Database = {
           phone_verified?: boolean | null
           retention_expiry?: string | null
           soft_deleted?: boolean | null
+          ssn_encrypted?: string | null
           ssn_last4?: string | null
           twofa_enabled?: boolean | null
           updated_at?: string
@@ -555,6 +614,7 @@ export type Database = {
         | "completed"
         | "refunded"
         | "guarantee_triggered"
+        | "active_member"
       document_type:
         | "id_front"
         | "id_back"
@@ -708,6 +768,7 @@ export const Constants = {
         "completed",
         "refunded",
         "guarantee_triggered",
+        "active_member",
       ],
       document_type: [
         "id_front",
