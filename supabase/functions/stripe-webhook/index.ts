@@ -47,31 +47,51 @@ serve(async (req) => {
         const customerEmail = session.customer_email || session.customer_details?.email;
         let userId = null;
 
+        // Get user by email
         if (customerEmail) {
-          const { data: userData } = await supabase
-            .from("profiles")
-            .select("id")
-            .eq("id", session.customer)
-            .single();
-          
-          userId = userData?.id;
+          const { data: authData } = await supabase.auth.admin.listUsers();
+          const user = authData.users?.find((u: any) => u.email === customerEmail);
+          userId = user?.id || null;
         }
 
-        await supabase.from("payments").insert({
+        // Insert payment record
+        const { data: paymentData, error: paymentError } = await supabase.from("payments").insert({
           user_id: userId,
           amount: (session.amount_total || 0) / 100,
           currency: session.currency?.toUpperCase() || "USD",
           payment_status: "completed",
           plan: session.metadata?.plan_type || "basic",
           paid_at: new Date().toISOString(),
+          stripe_product_id: session.metadata?.product_id,
+          stripe_price_id: session.metadata?.price_id,
           metadata: {
             session_id: session.id,
             service_name: session.metadata?.service_name,
             payment_intent: session.payment_intent,
           },
-        });
+        }).select().single();
 
-        console.log("[STRIPE-WEBHOOK] Payment recorded for session:", session.id);
+        if (paymentError) {
+          console.error("[STRIPE-WEBHOOK] Error recording payment:", paymentError);
+        } else {
+          console.log("[STRIPE-WEBHOOK] Payment recorded:", paymentData.id);
+        }
+
+        // Trigger case automation (handled by DB trigger auto_create_case_on_payment)
+        // Trigger notification (handled by DB trigger notify_admins_new_payment)
+        
+        // Send welcome notification to client
+        if (userId) {
+          await supabase.from("notifications").insert({
+            user_id: userId,
+            type: "payment_confirmed",
+            title: "Your Plan Is Active!",
+            message: "Your plan is active! Your credit restoration case has been opened. You may now upload your documents inside your client portal. Our team will begin reviewing your file immediately.",
+            link: "/portal/dashboard"
+          });
+        }
+
+        console.log("[STRIPE-WEBHOOK] Payment and case automation complete for session:", session.id);
         break;
       }
 

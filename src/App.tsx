@@ -20,11 +20,13 @@ import ClientDetail from "./pages/admin/ClientDetail";
 import ChexSystems from "./pages/ChexSystems";
 import Payments from "./pages/Payments";
 import Success from "./pages/Success";
+import PaymentSuccess from "./pages/PaymentSuccess";
 import Cancel from "./pages/Cancel";
 import Terms from "./pages/Terms";
 import Privacy from "./pages/Privacy";
 import Guarantee from "./pages/Guarantee";
 import Results from "./pages/Results";
+import CheckoutTest from "./pages/admin/CheckoutTest";
 
 const queryClient = new QueryClient();
 
@@ -49,6 +51,7 @@ const App = () => (
           <Route path="/portal/messages" element={<Messages />} />
           <Route path="/portal/profile" element={<Profile />} />
           <Route path="/success" element={<Success />} />
+          <Route path="/payment/success" element={<PaymentSuccess />} />
           <Route path="/cancel" element={<Cancel />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/privacy" element={<Privacy />} />
@@ -56,6 +59,7 @@ const App = () => (
           <Route path="/results" element={<Results />} />
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
           <Route path="/admin/client/:clientId" element={<ClientDetail />} />
+          <Route path="/admin/checkout-test" element={<CheckoutTest />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

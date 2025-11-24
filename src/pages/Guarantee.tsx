@@ -21,48 +21,51 @@ export default function Guarantee() {
           </section>
 
           <section className="mb-8">
-            <h2 className="text-2xl font-display font-semibold mb-4">2. Service-Based Refund Terms</h2>
+            <h2 className="text-2xl font-display font-semibold mb-4">2. Refund Policy</h2>
+            <p className="text-muted-foreground mb-4">
+              Refunds are available only if DeWayne's Credit does not deliver results within the stated service timeline.
+            </p>
+            <p className="text-muted-foreground mb-4">
+              For 4-Day Guaranteed Results services, refunds are evaluated if no progress has been made within 96 hours of receiving all required documents.
+            </p>
+            <p className="text-muted-foreground mb-4">
+              Refunds are processed back to the original payment method within 3–5 business days.
+            </p>
+            <p className="text-muted-foreground mb-4">
+              Clients who fail to provide required documentation are not eligible for refunds.
+            </p>
+
+            <h3 className="text-xl font-semibold mb-3 mt-6">Our Four Service Plans</h3>
             
-            <h3 className="text-xl font-semibold mb-3 mt-6">4-Day Guarantee Service</h3>
-            <p className="text-muted-foreground mb-4">
-              For our 4-Day Guaranteed Removal service, the following refund terms apply:
-            </p>
-            <ul className="list-disc pl-6 space-y-2 text-muted-foreground">
-              <li>If we do not begin processing your disputes within 4 business days of receiving all required documentation, you are eligible for a full refund</li>
-              <li>The 4-day timer begins only after all required documents are uploaded and verified by our team</li>
-              <li>Refunds must be requested within 30 days of the service purchase date</li>
-              <li>Partial work completed will not affect refund eligibility if we miss the 4-day deadline</li>
-            </ul>
+            <div className="space-y-4 mt-4">
+              <div className="bg-muted/50 rounded-lg p-4">
+                <h4 className="font-semibold mb-2">Basic Credit Removal (Up to 5 Items) – $500</h4>
+                <p className="text-sm text-muted-foreground">
+                  4-Day Guaranteed Results. Remove up to 5 negative items from your credit report.
+                </p>
+              </div>
 
-            <h3 className="text-xl font-semibold mb-3 mt-6">24-Hour ChexSystems Removal</h3>
-            <p className="text-muted-foreground mb-4">
-              For our 24-Hour ChexSystems Removal service ($400), the following terms apply:
-            </p>
-            <ul className="list-disc pl-6 space-y-2 text-muted-foreground">
-              <li>If we do not submit your ChexSystems dispute within 24 hours of receiving all required information, you are eligible for a full refund</li>
-              <li>The 24-hour timer begins when all required documents and information are received and verified</li>
-              <li>Results timing depends on ChexSystems response time, which is outside our control</li>
-              <li>Refund requests must be submitted within 14 days of the service purchase date</li>
-            </ul>
+              <div className="bg-muted/50 rounded-lg p-4">
+                <h4 className="font-semibold mb-2">Premium Credit Removal (Unlimited Items) – $750</h4>
+                <p className="text-sm text-muted-foreground">
+                  4-Day Guaranteed Results. Remove unlimited negative items with VIP 24/7 support.
+                </p>
+              </div>
 
-            <h3 className="text-xl font-semibold mb-3 mt-6">Starter Service ($40 Down Payment)</h3>
-            <p className="text-muted-foreground mb-4">
-              The $40 down payment for our starter service is non-refundable as it covers initial setup and processing fees. However:
-            </p>
-            <ul className="list-disc pl-6 space-y-2 text-muted-foreground">
-              <li>If we fail to deliver services as promised, you may be eligible for a refund of the full service amount</li>
-              <li>Remaining balance payments can be cancelled before services begin</li>
-            </ul>
+              <div className="bg-muted/50 rounded-lg p-4">
+                <h4 className="font-semibold mb-2">24-Hour ChexSystems Removal – $400</h4>
+                <p className="text-sm text-muted-foreground">
+                  Complete ChexSystems removal in 24 hours with money-back guarantee.
+                </p>
+              </div>
 
-            <h3 className="text-xl font-semibold mb-3 mt-6">Unlimited Items Service</h3>
-            <p className="text-muted-foreground mb-4">
-              For our Unlimited Items service ($999), refunds are available under the following conditions:
-            </p>
-            <ul className="list-disc pl-6 space-y-2 text-muted-foreground">
-              <li>Full refund if we fail to begin processing within the guaranteed timeframe</li>
-              <li>Partial refunds may be available if you cancel within 14 days and before substantial work has been completed</li>
-              <li>No refunds after 30 days or if more than 50% of disputes have been submitted</li>
-            </ul>
+              <div className="bg-muted/50 rounded-lg p-4">
+                <h4 className="font-semibold mb-2">Credit Mentorship Add-On – $1,200</h4>
+                <p className="text-sm text-muted-foreground">
+                  Expert credit mentorship with personalized credit building plan and ongoing support for 6 months.
+                </p>
+              </div>
+            </div>
           </section>
 
           <section className="mb-8">
