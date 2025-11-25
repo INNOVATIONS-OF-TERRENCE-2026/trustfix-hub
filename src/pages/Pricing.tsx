@@ -122,8 +122,9 @@ export default function Pricing() {
                       ))}
                     </ul>
 
+                    {/* THE FIX APPLIED HERE */}
                     <Button
-                      onClick={() => handleCheckout(plan.stripePriceId)}
+                      onClick={() => handleCheckout(plan.stripePriceId as string)}
                       disabled={loading === plan.stripePriceId}
                       className={`w-full ${plan.popular ? "shadow-gold" : ""}`}
                       variant={plan.popular ? "default" : "outline"}
@@ -149,10 +150,7 @@ export default function Pricing() {
                   <CardTitle className="text-center text-2xl font-display">Our 4-Day Guaranteed Results</CardTitle>
                 </CardHeader>
                 <CardContent className="text-center">
-                  <p className="text-muted-foreground mb-4">
-                    We guarantee verified results within 4 days of receiving your complete documentation, or you get a
-                    full refund.
-                  </p>
+                  <p className="text-muted-foreground mb-4">Verified results within 4 days or your money back.</p>
                   <Button variant="outline" onClick={() => (window.location.href = "/guarantee")}>
                     Read Full Guarantee Policy
                   </Button>
