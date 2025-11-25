@@ -38,18 +38,18 @@ export default function Pricing() {
 
   const handleCheckout = async (priceId: string) => {
     setLoading(priceId);
-    
+
     try {
-      const { data, error } = await supabase.functions.invoke('create-checkout-session', {
+      const { data, error } = await supabase.functions.invoke("create-checkout-session", {
         body: {
           priceId,
           successPath: "/pricing?status=success",
-          cancelPath: "/pricing?status=cancelled"
-        }
+          cancelPath: "/pricing?status=cancelled",
+        },
       });
 
       if (error) throw error;
-      
+
       if (data?.url) {
         window.location.href = data.url;
       } else {
@@ -60,7 +60,7 @@ export default function Pricing() {
       toast({
         title: "Checkout Error",
         description: error.message || "Unable to start checkout. Please try again or contact support.",
-        variant: "destructive"
+        variant: "destructive",
       });
     } finally {
       setLoading(null);
@@ -70,7 +70,7 @@ export default function Pricing() {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      
+
       <main className="flex-1">
         {/* Hero */}
         <section className="py-20 gradient-green">
@@ -91,10 +91,10 @@ export default function Pricing() {
           <div className="container">
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
               {STRIPE_PRODUCTS.map((plan) => (
-                <Card 
-                  key={plan.id} 
+                <Card
+                  key={plan.id}
                   className={`glass-card border-accent/20 hover:shadow-elegant transition-all duration-300 relative flex flex-col ${
-                    plan.popular ? 'ring-2 ring-accent shadow-gold' : ''
+                    plan.popular ? "ring-2 ring-accent shadow-gold" : ""
                   }`}
                 >
                   {plan.popular && (
@@ -120,19 +120,19 @@ export default function Pricing() {
                         </li>
                       ))}
                     </ul>
-                    <Button 
-                      onClick={() => handleCheckout(plan.stripePriceId)}
-                      disabled={loading === plan.stripePriceId}
-                      className={`w-full ${plan.popular ? 'shadow-gold' : ''}`}
-                      variant={plan.popular ? 'default' : 'outline'}
+                    <Button
+                      onClick={() => handleCheckout(plan.priceId)}
+                      disabled={loading === plan.priceId}
+                      className={`w-full ${plan.popular ? "shadow-gold" : ""}`}
+                      variant={plan.popular ? "default" : "outline"}
                     >
-                      {loading === plan.stripePriceId ? (
+                      {loading === plan.priceId ? (
                         <>
                           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                           Processing...
                         </>
                       ) : (
-                        `Get ${plan.name.split(' ')[0]} Plan`
+                        `Get ${plan.name.split(" ")[0]} Plan`
                       )}
                     </Button>
                   </CardContent>
@@ -144,16 +144,14 @@ export default function Pricing() {
             <div className="mt-16 max-w-3xl mx-auto">
               <Card className="glass-card border-accent/20">
                 <CardHeader>
-                  <CardTitle className="text-center text-2xl font-display">
-                    Our 4-Day Guaranteed Results
-                  </CardTitle>
+                  <CardTitle className="text-center text-2xl font-display">Our 4-Day Guaranteed Results</CardTitle>
                 </CardHeader>
                 <CardContent className="text-center">
                   <p className="text-muted-foreground mb-4">
-                    We guarantee verified results within 4 days of receiving your complete documentation, 
-                    or you receive a full refund. No questions asked.
+                    We guarantee verified results within 4 days of receiving your complete documentation, or you receive
+                    a full refund. No questions asked.
                   </p>
-                  <Button variant="outline" onClick={() => window.location.href = '/guarantee'}>
+                  <Button variant="outline" onClick={() => (window.location.href = "/guarantee")}>
                     Read Full Guarantee Policy
                   </Button>
                 </CardContent>
