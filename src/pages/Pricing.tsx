@@ -16,7 +16,6 @@ export default function Pricing() {
   const [searchParams, setSearchParams] = useSearchParams();
   const status = searchParams.get("status");
 
-  // Handle success/cancel redirects
   useEffect(() => {
     if (status === "success") {
       toast({
@@ -28,7 +27,7 @@ export default function Pricing() {
     } else if (status === "cancelled") {
       toast({
         title: "Checkout Cancelled",
-        description: "You haven't been charged. Try again when you're ready.",
+        description: "You haven't been charged.",
         variant: "destructive",
       });
       searchParams.delete("status");
@@ -36,9 +35,9 @@ export default function Pricing() {
     }
   }, [status]);
 
-  // MAIN CHECKOUT FUNCTION — NOW FIXED
   const handleCheckout = async (priceId: string) => {
-    console.log("🔥 PRICE ID SENT TO EDGE FUNCTION:", priceId);
+    console.log("🔥 SENDING PRICE ID TO EDGE FUNCTION:", priceId);
+
     setLoading(priceId);
 
     try {
@@ -50,18 +49,20 @@ export default function Pricing() {
         },
       });
 
+      console.log("🔥 EDGE FUNCTION RESPONSE:", data, error);
+
       if (error) throw error;
 
       if (data?.url) {
         window.location.href = data.url;
       } else {
-        throw new Error("No checkout URL returned");
+        throw new Error("No checkout URL returned from function");
       }
     } catch (error: any) {
-      console.error("Checkout error:", error);
+      console.error("❌ Checkout error:", error);
       toast({
         title: "Checkout Error",
-        description: error.message || "Unable to start checkout. Please try again.",
+        description: error.message || "Unable to start checkout.",
         variant: "destructive",
       });
     } finally {
@@ -74,7 +75,7 @@ export default function Pricing() {
       <Header />
 
       <main className="flex-1">
-        {/* Hero Section */}
+        {/* Hero */}
         <section className="py-20 gradient-green">
           <div className="container">
             <div className="max-w-3xl mx-auto text-center">
@@ -88,7 +89,7 @@ export default function Pricing() {
           </div>
         </section>
 
-        {/* Pricing Cards */}
+        {/* Pricing */}
         <section className="py-20 bg-background">
           <div className="container">
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
@@ -125,9 +126,8 @@ export default function Pricing() {
                       ))}
                     </ul>
 
-                    {/* FIXED BUTTON */}
                     <Button
-                      onClick={() => handleCheckout(plan.stripePriceId as string)}
+                      onClick={() => handleCheckout(plan.stripePriceId)}
                       disabled={loading === plan.stripePriceId}
                       className={`w-full ${plan.popular ? "shadow-gold" : ""}`}
                       variant={plan.popular ? "default" : "outline"}
@@ -135,7 +135,7 @@ export default function Pricing() {
                       {loading === plan.stripePriceId ? (
                         <>
                           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          Processing...
+                          Processing…
                         </>
                       ) : (
                         `Get ${plan.name.split(" ")[0]} Plan`
@@ -146,7 +146,7 @@ export default function Pricing() {
               ))}
             </div>
 
-            {/* Guarantee Section */}
+            {/* Guarantee */}
             <div className="mt-16 max-w-3xl mx-auto">
               <Card className="glass-card border-accent/20">
                 <CardHeader>
