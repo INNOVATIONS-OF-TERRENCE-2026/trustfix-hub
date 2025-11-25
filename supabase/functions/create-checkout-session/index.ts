@@ -46,7 +46,8 @@ serve(async (req) => {
       });
     }
 
-    const stripeKey = Deno.env.get("STRIPE_SECRET_KEY");
+    const stripeKey = Deno.env.get("STRIPE_SECRET_KEY_OVERRIDE") ?? Deno.env.get("STRIPE_SECRET_KEY");
+
     if (!stripeKey) {
       console.error("[CREATE-CHECKOUT] STRIPE_SECRET_KEY not configured");
       return new Response(JSON.stringify({ error: "Stripe configuration error" }), {
