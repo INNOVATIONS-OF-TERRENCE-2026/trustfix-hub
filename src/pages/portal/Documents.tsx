@@ -46,13 +46,30 @@ export default function Documents() {
 
   const fetchDocuments = async (uid: string) => {
     try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) return;
+
       const [docsRes, caseRes] = await Promise.all([
         supabase.from("documents").select("*").eq("user_id", uid).order("uploaded_at", { ascending: false }),
-        supabase.from("cases").select("id").eq("user_id", uid).single()
+        supabase.functions.invoke("get-active-case", {
+          headers: {
+            Authorization: `Bearer ${session.access_token}`,
+          },
+        })
       ]);
 
       setDocuments(docsRes.data || []);
-      setCaseId(caseRes.data?.id || "");
+      
+      if (caseRes.data?.case?.id) {
+        setCaseId(caseRes.data.case.id);
+      } else {
+        setCaseId("");
+        toast({
+          title: "No Active Case",
+          description: "Please complete a purchase to activate document uploads.",
+          variant: "destructive"
+        });
+      }
     } catch (error: any) {
       toast({
         title: "Error",

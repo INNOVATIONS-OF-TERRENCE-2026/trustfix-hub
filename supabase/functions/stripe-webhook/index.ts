@@ -54,6 +54,25 @@ serve(async (req) => {
           userId = user?.id || null;
         }
 
+        if (!userId) {
+          console.log("[STRIPE-WEBHOOK] No user found for email:", customerEmail);
+          return new Response(JSON.stringify({ received: true }), {
+            headers: { "Content-Type": "application/json" },
+            status: 200,
+          });
+        }
+
+        // Determine product name from line items
+        let productName = "Unknown";
+        try {
+          const lineItems = await stripe.checkout.sessions.listLineItems(session.id);
+          if (lineItems.data.length > 0) {
+            productName = lineItems.data[0].description || "Unknown";
+          }
+        } catch (err) {
+          console.error("[STRIPE-WEBHOOK] Error fetching line items:", err);
+        }
+
         // Insert payment record
         const { data: paymentData, error: paymentError } = await supabase.from("payments").insert({
           user_id: userId,
@@ -66,7 +85,7 @@ serve(async (req) => {
           stripe_price_id: session.metadata?.price_id,
           metadata: {
             session_id: session.id,
-            service_name: session.metadata?.service_name,
+            service_name: productName,
             payment_intent: session.payment_intent,
           },
         }).select().single();
@@ -77,19 +96,44 @@ serve(async (req) => {
           console.log("[STRIPE-WEBHOOK] Payment recorded:", paymentData.id);
         }
 
-        // Trigger case automation (handled by DB trigger auto_create_case_on_payment)
-        // Trigger notification (handled by DB trigger notify_admins_new_payment)
+        // Check for existing active case
+        const { data: existingCase } = await supabase
+          .from("cases")
+          .select("id")
+          .eq("user_id", userId)
+          .eq("status", "active_member")
+          .single();
+
+        if (!existingCase) {
+          // Create new case
+          const { data: newCase, error: caseError } = await supabase.from("cases").insert({
+            user_id: userId,
+            status: "active_member",
+            current_stage: "reviewing_docs",
+            service_type: productName,
+            started_at: new Date().toISOString(),
+            sla_hours: productName.includes("24-Hour") ? 24 : 96,
+            sla_deadline: new Date(Date.now() + (productName.includes("24-Hour") ? 24 : 96) * 60 * 60 * 1000).toISOString(),
+            payment_id: paymentData?.id || null,
+          }).select().single();
+
+          if (caseError) {
+            console.error("[STRIPE-WEBHOOK] Error creating case:", caseError);
+          } else {
+            console.log("[STRIPE-WEBHOOK] Case created:", newCase.id);
+          }
+        } else {
+          console.log("[STRIPE-WEBHOOK] Active case already exists:", existingCase.id);
+        }
         
         // Send welcome notification to client
-        if (userId) {
-          await supabase.from("notifications").insert({
-            user_id: userId,
-            type: "payment_confirmed",
-            title: "Your Plan Is Active!",
-            message: "Your plan is active! Your credit restoration case has been opened. You may now upload your documents inside your client portal. Our team will begin reviewing your file immediately.",
-            link: "/portal/dashboard"
-          });
-        }
+        await supabase.from("notifications").insert({
+          user_id: userId,
+          type: "payment_confirmed",
+          title: "Your Plan Is Active!",
+          message: "Your plan is active! Your credit restoration case has been opened. You may now upload your documents inside your client portal. Our team will begin reviewing your file immediately.",
+          link: "/portal/dashboard"
+        });
 
         console.log("[STRIPE-WEBHOOK] Payment and case automation complete for session:", session.id);
         break;
