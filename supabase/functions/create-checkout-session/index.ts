@@ -19,57 +19,43 @@ serve(async (req) => {
   }
 
   if (req.method !== "POST") {
-    return new Response(
-      JSON.stringify({ error: "Method not allowed. Use POST." }),
-      {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-        status: 405,
-      }
-    );
+    return new Response(JSON.stringify({ error: "Method not allowed. Use POST." }), {
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      status: 405,
+    });
   }
 
   try {
     console.log("[CREATE-CHECKOUT] Function started");
-    
+
     const body = await req.json();
     const { priceId, successPath, cancelPath } = body;
     console.log("[CREATE-CHECKOUT] Request data:", { priceId, successPath, cancelPath });
 
     if (!priceId) {
-      return new Response(
-        JSON.stringify({ error: "priceId is required" }),
-        {
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-          status: 400,
-        }
-      );
+      return new Response(JSON.stringify({ error: "priceId is required" }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 400,
+      });
     }
 
     if (!ALLOWED_PRICE_IDS.has(priceId)) {
-      return new Response(
-        JSON.stringify({ error: "Invalid priceId provided" }),
-        {
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-          status: 400,
-        }
-      );
+      return new Response(JSON.stringify({ error: "Invalid priceId provided" }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 400,
+      });
     }
 
     const stripeKey = Deno.env.get("STRIPE_SECRET_KEY");
     if (!stripeKey) {
       console.error("[CREATE-CHECKOUT] STRIPE_SECRET_KEY not configured");
-      return new Response(
-        JSON.stringify({ error: "Stripe configuration error" }),
-        {
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-          status: 500,
-        }
-      );
+      return new Response(JSON.stringify({ error: "Stripe configuration error" }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 500,
+      });
     }
 
-    const stripe = new Stripe(stripeKey, {
-      apiVersion: "2025-08-27.basil",
-    });
+    const stripe = new Stripe(stripeKey);
 
     const baseUrl = Deno.env.get("BASE_URL") || "https://dewaynescredit.com";
     const successUrl = `${baseUrl}${successPath || "/pricing?status=success"}&session_id={CHECKOUT_SESSION_ID}`;
@@ -92,22 +78,16 @@ serve(async (req) => {
 
     console.log("[CREATE-CHECKOUT] Session created successfully:", session.id);
 
-    return new Response(
-      JSON.stringify({ url: session.url, sessionId: session.id }),
-      {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-        status: 200,
-      }
-    );
+    return new Response(JSON.stringify({ url: session.url, sessionId: session.id }), {
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      status: 200,
+    });
   } catch (error) {
     console.error("[CREATE-CHECKOUT] Error:", error);
     const errorMessage = error instanceof Error ? error.message : String(error);
-    return new Response(
-      JSON.stringify({ error: errorMessage }),
-      {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-        status: 500,
-      }
-    );
+    return new Response(JSON.stringify({ error: errorMessage }), {
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      status: 500,
+    });
   }
 });
