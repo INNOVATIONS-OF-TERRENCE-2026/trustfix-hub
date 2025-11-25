@@ -36,6 +36,7 @@ export default function Pricing() {
   }, [status]);
 
   const handleCheckout = async (priceId: string) => {
+    console.log("🚀 PRICE ID SENT TO EDGE FUNCTION:", priceId);
     setLoading(priceId);
 
     try {
@@ -122,7 +123,7 @@ export default function Pricing() {
                       ))}
                     </ul>
 
-                    {/* THE FIX APPLIED HERE */}
+                    {/* FIXED BUTTON */}
                     <Button
                       onClick={() => handleCheckout(plan.stripePriceId as string)}
                       disabled={loading === plan.stripePriceId}
