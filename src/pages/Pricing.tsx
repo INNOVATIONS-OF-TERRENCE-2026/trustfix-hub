@@ -3,7 +3,7 @@ import { Footer } from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { CheckCircle2, Star, Loader2 } from "lucide-react";
+import { CheckCircle2, Star, Loader2, AlertCircle, X } from "lucide-react";
 import { STRIPE_PRODUCTS } from "@/config/stripeProducts";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -22,12 +22,13 @@ export default function Pricing() {
         title: "Payment Successful!",
         description: "We'll start on your case immediately. Check your email for next steps.",
       });
+      // Clear the status param
       searchParams.delete("status");
       setSearchParams(searchParams);
     } else if (status === "cancelled") {
       toast({
         title: "Checkout Cancelled",
-        description: "You haven't been charged.",
+        description: "You haven't been charged. Feel free to try again when ready.",
         variant: "destructive",
       });
       searchParams.delete("status");
@@ -36,34 +37,30 @@ export default function Pricing() {
   }, [status]);
 
   const handleCheckout = async (priceId: string) => {
-    console.log("🔥 SENDING PRICE ID TO EDGE FUNCTION:", priceId);
-
     setLoading(priceId);
-
+    
     try {
-      const { data, error } = await supabase.functions.invoke("create-checkout-session", {
+      const { data, error } = await supabase.functions.invoke('create-checkout-session', {
         body: {
           priceId,
           successPath: "/pricing?status=success",
-          cancelPath: "/pricing?status=cancelled",
-        },
+          cancelPath: "/pricing?status=cancelled"
+        }
       });
 
-      console.log("🔥 EDGE FUNCTION RESPONSE:", data, error);
-
       if (error) throw error;
-
+      
       if (data?.url) {
         window.location.href = data.url;
       } else {
-        throw new Error("No checkout URL returned from function");
+        throw new Error("No checkout URL returned");
       }
     } catch (error: any) {
-      console.error("❌ Checkout error:", error);
+      console.error("Checkout error:", error);
       toast({
         title: "Checkout Error",
-        description: error.message || "Unable to start checkout.",
-        variant: "destructive",
+        description: error.message || "Unable to start checkout. Please try again or contact support.",
+        variant: "destructive"
       });
     } finally {
       setLoading(null);
@@ -73,7 +70,7 @@ export default function Pricing() {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-
+      
       <main className="flex-1">
         {/* Hero */}
         <section className="py-20 gradient-green">
@@ -83,21 +80,21 @@ export default function Pricing() {
                 Transparent Pricing Plans
               </h1>
               <p className="text-lg text-primary-foreground/90">
-                Start with BNPL. 4-Day Guarantee. Money-back on all plans.
+                Start with BNPL options available. 4-Day Guarantee. Money-back promise on all plans.
               </p>
             </div>
           </div>
         </section>
 
-        {/* Pricing */}
+        {/* Pricing Cards */}
         <section className="py-20 bg-background">
           <div className="container">
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
               {STRIPE_PRODUCTS.map((plan) => (
-                <Card
-                  key={plan.id}
+                <Card 
+                  key={plan.id} 
                   className={`glass-card border-accent/20 hover:shadow-elegant transition-all duration-300 relative flex flex-col ${
-                    plan.popular ? "ring-2 ring-accent shadow-gold" : ""
+                    plan.popular ? 'ring-2 ring-accent shadow-gold' : ''
                   }`}
                 >
                   {plan.popular && (
@@ -106,7 +103,6 @@ export default function Pricing() {
                       Most Popular
                     </Badge>
                   )}
-
                   <CardHeader className="text-center">
                     <CardTitle className="text-2xl font-display mb-2">{plan.name}</CardTitle>
                     <CardDescription>{plan.description}</CardDescription>
@@ -115,7 +111,6 @@ export default function Pricing() {
                       <span className="text-muted-foreground"> one-time</span>
                     </div>
                   </CardHeader>
-
                   <CardContent className="flex-1 flex flex-col">
                     <ul className="space-y-3 mb-6 flex-1">
                       {plan.features.map((feature, idx) => (
@@ -125,20 +120,19 @@ export default function Pricing() {
                         </li>
                       ))}
                     </ul>
-
-                    <Button
+                    <Button 
                       onClick={() => handleCheckout(plan.stripePriceId)}
                       disabled={loading === plan.stripePriceId}
-                      className={`w-full ${plan.popular ? "shadow-gold" : ""}`}
-                      variant={plan.popular ? "default" : "outline"}
+                      className={`w-full ${plan.popular ? 'shadow-gold' : ''}`}
+                      variant={plan.popular ? 'default' : 'outline'}
                     >
                       {loading === plan.stripePriceId ? (
                         <>
                           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          Processing…
+                          Processing...
                         </>
                       ) : (
-                        `Get ${plan.name.split(" ")[0]} Plan`
+                        `Get ${plan.name.split(' ')[0]} Plan`
                       )}
                     </Button>
                   </CardContent>
@@ -146,15 +140,20 @@ export default function Pricing() {
               ))}
             </div>
 
-            {/* Guarantee */}
+            {/* Guarantee Notice */}
             <div className="mt-16 max-w-3xl mx-auto">
               <Card className="glass-card border-accent/20">
                 <CardHeader>
-                  <CardTitle className="text-center text-2xl font-display">Our 4-Day Guaranteed Results</CardTitle>
+                  <CardTitle className="text-center text-2xl font-display">
+                    Our 4-Day Guaranteed Results
+                  </CardTitle>
                 </CardHeader>
                 <CardContent className="text-center">
-                  <p className="text-muted-foreground mb-4">Verified results within 4 days or your money back.</p>
-                  <Button variant="outline" onClick={() => (window.location.href = "/guarantee")}>
+                  <p className="text-muted-foreground mb-4">
+                    We guarantee verified results within 4 days of receiving your complete documentation, 
+                    or you receive a full refund. No questions asked.
+                  </p>
+                  <Button variant="outline" onClick={() => window.location.href = '/guarantee'}>
                     Read Full Guarantee Policy
                   </Button>
                 </CardContent>
