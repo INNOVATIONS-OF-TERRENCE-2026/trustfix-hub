@@ -3,50 +3,63 @@ import { Footer } from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { CheckCircle2, Star, Loader2 } from "lucide-react";
+import { CheckCircle2, Star, Loader2, AlertCircle, X } from "lucide-react";
 import { STRIPE_PRODUCTS } from "@/config/stripeProducts";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 
 export default function Pricing() {
   const { toast } = useToast();
   const [loading, setLoading] = useState<string | null>(null);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const status = searchParams.get("status");
 
-  const handleCheckout = async (productId: string, priceId: string) => {
-    setLoading(productId);
+  useEffect(() => {
+    if (status === "success") {
+      toast({
+        title: "Payment Successful!",
+        description: "We'll start on your case immediately. Check your email for next steps.",
+      });
+      // Clear the status param
+      searchParams.delete("status");
+      setSearchParams(searchParams);
+    } else if (status === "cancelled") {
+      toast({
+        title: "Checkout Cancelled",
+        description: "You haven't been charged. Feel free to try again when ready.",
+        variant: "destructive",
+      });
+      searchParams.delete("status");
+      setSearchParams(searchParams);
+    }
+  }, [status]);
+
+  const handleCheckout = async (priceId: string) => {
+    setLoading(priceId);
     
     try {
-      const { data: { session } } = await supabase.auth.getSession();
-      
-      if (!session) {
-        toast({
-          title: "Authentication Required",
-          description: "Please log in to purchase",
-          variant: "destructive"
-        });
-        window.location.href = "/auth";
-        return;
-      }
-
       const { data, error } = await supabase.functions.invoke('create-checkout-session', {
         body: {
           priceId,
-          productId,
-          successUrl: `${window.location.origin}/success`,
-          cancelUrl: `${window.location.origin}/cancel`
+          successPath: "/pricing?status=success",
+          cancelPath: "/pricing?status=cancelled"
         }
       });
 
       if (error) throw error;
       
       if (data?.url) {
-        window.open(data.url, '_blank');
+        window.location.href = data.url;
+      } else {
+        throw new Error("No checkout URL returned");
       }
     } catch (error: any) {
+      console.error("Checkout error:", error);
       toast({
-        title: "Error",
-        description: error.message,
+        title: "Checkout Error",
+        description: error.message || "Unable to start checkout. Please try again or contact support.",
         variant: "destructive"
       });
     } finally {
@@ -108,12 +121,12 @@ export default function Pricing() {
                       ))}
                     </ul>
                     <Button 
-                      onClick={() => handleCheckout(plan.stripeProductId, plan.stripePriceId)}
-                      disabled={loading === plan.stripeProductId}
+                      onClick={() => handleCheckout(plan.stripePriceId)}
+                      disabled={loading === plan.stripePriceId}
                       className={`w-full ${plan.popular ? 'shadow-gold' : ''}`}
                       variant={plan.popular ? 'default' : 'outline'}
                     >
-                      {loading === plan.stripeProductId ? (
+                      {loading === plan.stripePriceId ? (
                         <>
                           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                           Processing...
