@@ -61,15 +61,22 @@ export default function Dashboard() {
 
   const fetchDashboardData = async (userId: string) => {
     try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) return;
+
       const [profileRes, caseRes, docsRes, msgsRes] = await Promise.all([
         supabase.from("profiles").select("*").eq("id", userId).single(),
-        supabase.from("cases").select("*").eq("user_id", userId).single(),
+        supabase.functions.invoke("get-active-case", {
+          headers: {
+            Authorization: `Bearer ${session.access_token}`,
+          },
+        }),
         supabase.from("documents").select("*").eq("user_id", userId).order("uploaded_at", { ascending: false }).limit(5),
         supabase.from("messages").select("*").eq("to_user_id", userId).order("created_at", { ascending: false }).limit(5)
       ]);
 
       setUserData(profileRes.data);
-      setCaseData(caseRes.data);
+      setCaseData(caseRes.data?.case || null);
       setDocuments(docsRes.data || []);
       setMessages(msgsRes.data || []);
     } catch (error: any) {
@@ -128,9 +135,17 @@ export default function Dashboard() {
                   <p className="text-sm text-muted-foreground">
                     Current Stage: {caseData.current_stage?.replace(/_/g, " ")}
                   </p>
+                  <p className="text-xs text-muted-foreground">
+                    Product: {caseData.service_type || "Credit Repair"}
+                  </p>
                 </div>
               ) : (
-                <p className="text-sm text-muted-foreground">No active case</p>
+                <div className="space-y-2">
+                  <p className="text-sm text-muted-foreground">No active case yet.</p>
+                  <Button size="sm" onClick={() => navigate("/pricing")}>
+                    View Plans
+                  </Button>
+                </div>
               )}
             </CardContent>
           </Card>
