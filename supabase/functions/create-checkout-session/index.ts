@@ -62,7 +62,10 @@ serve(async (req) => {
     const successUrl = `${baseUrl}${successPath || "/pricing?status=success"}&session_id={CHECKOUT_SESSION_ID}`;
     const cancelUrl = `${baseUrl}${cancelPath || "/pricing?status=cancelled"}`;
 
-    console.log("[CREATE-CHECKOUT] Creating session with URLs:", { successUrl, cancelUrl });
+    console.log("[CREATE-CHECKOUT] Creating session with URLs:", {
+      successUrl,
+      cancelUrl,
+    });
 
     const session = await stripe.checkout.sessions.create({
       line_items: [
@@ -72,6 +75,10 @@ serve(async (req) => {
         },
       ],
       mode: "payment",
+
+      // ✅ REQUIRED FOR BNPL & CARD
+      payment_method_types: ["card", "affirm", "afterpay_clearpay", "klarna"],
+
       success_url: successUrl,
       cancel_url: cancelUrl,
     });
