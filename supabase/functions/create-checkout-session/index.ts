@@ -72,7 +72,6 @@ serve(async (req) => {
         },
       ],
       mode: "payment",
-      payment_method_types: ["card", "affirm", "afterpay_clearpay", "klarna"],
       success_url: successUrl,
       cancel_url: cancelUrl,
     });
