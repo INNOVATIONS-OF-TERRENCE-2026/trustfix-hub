@@ -3,7 +3,7 @@ import { Footer } from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { CheckCircle2, Star, Loader2, AlertCircle, X } from "lucide-react";
+import { CheckCircle2, Star, Loader2 } from "lucide-react";
 import { STRIPE_PRODUCTS } from "@/config/stripeProducts";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -22,7 +22,6 @@ export default function Pricing() {
         title: "Payment Successful!",
         description: "We'll start on your case immediately. Check your email for next steps.",
       });
-      // Clear the status param
       searchParams.delete("status");
       setSearchParams(searchParams);
     } else if (status === "cancelled") {
@@ -103,6 +102,7 @@ export default function Pricing() {
                       Most Popular
                     </Badge>
                   )}
+
                   <CardHeader className="text-center">
                     <CardTitle className="text-2xl font-display mb-2">{plan.name}</CardTitle>
                     <CardDescription>{plan.description}</CardDescription>
@@ -111,6 +111,7 @@ export default function Pricing() {
                       <span className="text-muted-foreground"> one-time</span>
                     </div>
                   </CardHeader>
+
                   <CardContent className="flex-1 flex flex-col">
                     <ul className="space-y-3 mb-6 flex-1">
                       {plan.features.map((feature, idx) => (
@@ -120,13 +121,14 @@ export default function Pricing() {
                         </li>
                       ))}
                     </ul>
+
                     <Button
-                      onClick={() => handleCheckout(plan.priceId)}
-                      disabled={loading === plan.priceId}
+                      onClick={() => handleCheckout(plan.stripePriceId)}
+                      disabled={loading === plan.stripePriceId}
                       className={`w-full ${plan.popular ? "shadow-gold" : ""}`}
                       variant={plan.popular ? "default" : "outline"}
                     >
-                      {loading === plan.priceId ? (
+                      {loading === plan.stripePriceId ? (
                         <>
                           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                           Processing...
@@ -140,7 +142,7 @@ export default function Pricing() {
               ))}
             </div>
 
-            {/* Guarantee Notice */}
+            {/* Guarantee Section */}
             <div className="mt-16 max-w-3xl mx-auto">
               <Card className="glass-card border-accent/20">
                 <CardHeader>
