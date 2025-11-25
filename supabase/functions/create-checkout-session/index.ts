@@ -24,7 +24,6 @@ serve(async (req) => {
       status: 405,
     });
   }
-
   try {
     console.log("[CREATE-CHECKOUT] Function started");
 
