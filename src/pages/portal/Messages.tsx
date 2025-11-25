@@ -19,7 +19,6 @@ export default function Messages() {
   const [messages, setMessages] = useState<any[]>([]);
   const [newMessage, setNewMessage] = useState("");
   const [userId, setUserId] = useState("");
-  const [caseId, setCaseId] = useState("");
 
   useEffect(() => {
     checkAuth();
@@ -32,34 +31,16 @@ export default function Messages() {
       return;
     }
     setUserId(session.user.id);
-    
-    // Get user's case
-    const { data: caseData } = await supabase
-      .from("cases")
-      .select("id")
-      .eq("user_id", session.user.id)
-      .single();
-    
-    if (caseData) {
-      setCaseId(caseData.id);
-      fetchMessages(session.user.id, caseData.id);
-      setupRealtimeSubscription(session.user.id, caseData.id);
-    } else {
-      setLoading(false);
-      toast({
-        title: "No Active Case",
-        description: "You need an active case to send messages.",
-        variant: "destructive"
-      });
-    }
+    fetchMessages(session.user.id);
+    setupRealtimeSubscription(session.user.id);
   };
 
-  const fetchMessages = async (uid: string, caseIdParam: string) => {
+  const fetchMessages = async (uid: string) => {
     try {
       const { data, error } = await supabase
         .from("messages")
         .select("*")
-        .eq("case_id", caseIdParam)
+        .or(`from_user_id.eq.${uid},to_user_id.eq.${uid}`)
         .order("created_at", { ascending: true });
 
       if (error) throw error;
@@ -75,19 +56,19 @@ export default function Messages() {
     }
   };
 
-  const setupRealtimeSubscription = (uid: string, caseIdParam: string) => {
+  const setupRealtimeSubscription = (uid: string) => {
     const channel = supabase
-      .channel(`messages-${caseIdParam}`)
+      .channel("messages")
       .on(
         "postgres_changes",
         {
           event: "*",
           schema: "public",
           table: "messages",
-          filter: `case_id=eq.${caseIdParam}`
+          filter: `to_user_id=eq.${uid}`
         },
         () => {
-          fetchMessages(uid, caseIdParam);
+          fetchMessages(uid);
         }
       )
       .subscribe();
@@ -98,13 +79,12 @@ export default function Messages() {
   };
 
   const handleSendMessage = async () => {
-    if (!newMessage.trim() || !caseId) return;
+    if (!newMessage.trim()) return;
 
     setSending(true);
     try {
       const { error } = await supabase.from("messages").insert({
         from_user_id: userId,
-        case_id: caseId,
         content: newMessage,
         is_admin_message: false
       });
@@ -117,7 +97,7 @@ export default function Messages() {
       });
 
       setNewMessage("");
-      fetchMessages(userId, caseId);
+      fetchMessages(userId);
     } catch (error: any) {
       toast({
         title: "Error",

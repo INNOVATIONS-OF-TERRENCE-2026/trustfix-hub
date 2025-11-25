@@ -47,30 +47,6 @@ export default function Dashboard() {
   }, [caseData]);
 
   useEffect(() => {
-    if (!userData?.id) return;
-    
-    const channel = supabase
-      .channel(`case-updates-${userData.id}`)
-      .on(
-        "postgres_changes",
-        {
-          event: "UPDATE",
-          schema: "public",
-          table: "cases",
-          filter: `user_id=eq.${userData.id}`
-        },
-        () => {
-          fetchDashboardData(userData.id);
-        }
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [userData]);
-
-  useEffect(() => {
     checkAuth();
   }, []);
 

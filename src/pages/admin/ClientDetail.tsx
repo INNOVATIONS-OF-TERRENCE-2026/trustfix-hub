@@ -5,7 +5,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Loader2, Send, FileText, Shield, Mail, Phone, CreditCard } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Header } from "@/components/Header";
@@ -23,45 +22,10 @@ export default function ClientDetail() {
   const [documents, setDocuments] = useState<any[]>([]);
   const [messages, setMessages] = useState<any[]>([]);
   const [newMessage, setNewMessage] = useState("");
-  const [updatingStatus, setUpdatingStatus] = useState(false);
 
   useEffect(() => {
     checkAdminAndFetch();
-    setupRealtimeSubscription();
   }, [clientId]);
-
-  const setupRealtimeSubscription = () => {
-    const channel = supabase
-      .channel(`client-${clientId}`)
-      .on(
-        "postgres_changes",
-        {
-          event: "*",
-          schema: "public",
-          table: "cases",
-          filter: `user_id=eq.${clientId}`
-        },
-        () => {
-          fetchClientData();
-        }
-      )
-      .on(
-        "postgres_changes",
-        {
-          event: "INSERT",
-          schema: "public",
-          table: "messages",
-        },
-        () => {
-          fetchClientData();
-        }
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  };
 
   const checkAdminAndFetch = async () => {
     const { data: { session } } = await supabase.auth.getSession();
@@ -122,7 +86,6 @@ export default function ClientDetail() {
       const { error } = await supabase.from("messages").insert({
         from_user_id: session!.user.id,
         to_user_id: clientId,
-        case_id: caseData?.id,
         content: newMessage,
         is_admin_message: true
       });
@@ -144,35 +107,6 @@ export default function ClientDetail() {
       });
     } finally {
       setSending(false);
-    }
-  };
-
-  const handleUpdateStatus = async (newStatus: string) => {
-    setUpdatingStatus(true);
-    try {
-      const { error } = await supabase
-        .from("cases")
-        .update({ 
-          status: newStatus as "active_member" | "completed" | "files_needed" | "guarantee_triggered" | "in_progress" | "not_started" | "refunded" | "under_review"
-        })
-        .eq("id", caseData?.id);
-
-      if (error) throw error;
-
-      toast({
-        title: "Success",
-        description: "Case status updated successfully"
-      });
-
-      fetchClientData();
-    } catch (error: any) {
-      toast({
-        title: "Error",
-        description: error.message,
-        variant: "destructive"
-      });
-    } finally {
-      setUpdatingStatus(false);
     }
   };
 
@@ -235,26 +169,8 @@ export default function ClientDetail() {
                 <p className="font-medium">{productInfo?.name || 'Unknown'}</p>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground mb-2">Case Status</p>
-                <div className="flex items-center gap-2">
-                  <Select 
-                    value={caseData?.status} 
-                    onValueChange={handleUpdateStatus}
-                    disabled={updatingStatus}
-                  >
-                    <SelectTrigger className="w-[200px]">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="files_needed">Files Needed</SelectItem>
-                      <SelectItem value="under_review">Under Review</SelectItem>
-                      <SelectItem value="in_progress">In Progress</SelectItem>
-                      <SelectItem value="completed">Completed</SelectItem>
-                      <SelectItem value="active_member">Active Member</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  {updatingStatus && <Loader2 className="h-4 w-4 animate-spin" />}
-                </div>
+                <p className="text-sm text-muted-foreground">Case Status</p>
+                <Badge>{caseData?.status?.replace(/_/g, ' ').toUpperCase()}</Badge>
               </div>
             </CardContent>
           </Card>
