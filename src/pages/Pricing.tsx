@@ -27,7 +27,7 @@ export default function Pricing() {
     } else if (status === "cancelled") {
       toast({
         title: "Checkout Cancelled",
-        description: "You haven't been charged. Feel free to try again when ready.",
+        description: "You haven't been charged. Try again when you're ready.",
         variant: "destructive",
       });
       searchParams.delete("status");
@@ -58,7 +58,7 @@ export default function Pricing() {
       console.error("Checkout error:", error);
       toast({
         title: "Checkout Error",
-        description: error.message || "Unable to start checkout. Please try again or contact support.",
+        description: error.message || "Unable to start checkout. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -79,13 +79,13 @@ export default function Pricing() {
                 Transparent Pricing Plans
               </h1>
               <p className="text-lg text-primary-foreground/90">
-                Start with BNPL options available. 4-Day Guarantee. Money-back promise on all plans.
+                Start with BNPL. 4-Day Guarantee. Money-back on all plans.
               </p>
             </div>
           </div>
         </section>
 
-        {/* Pricing Cards */}
+        {/* Pricing */}
         <section className="py-20 bg-background">
           <div className="container">
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
@@ -142,7 +142,7 @@ export default function Pricing() {
               ))}
             </div>
 
-            {/* Guarantee Section */}
+            {/* Guarantee */}
             <div className="mt-16 max-w-3xl mx-auto">
               <Card className="glass-card border-accent/20">
                 <CardHeader>
@@ -150,8 +150,8 @@ export default function Pricing() {
                 </CardHeader>
                 <CardContent className="text-center">
                   <p className="text-muted-foreground mb-4">
-                    We guarantee verified results within 4 days of receiving your complete documentation, or you receive
-                    a full refund. No questions asked.
+                    We guarantee verified results within 4 days of receiving your complete documentation, or you get a
+                    full refund.
                   </p>
                   <Button variant="outline" onClick={() => (window.location.href = "/guarantee")}>
                     Read Full Guarantee Policy
