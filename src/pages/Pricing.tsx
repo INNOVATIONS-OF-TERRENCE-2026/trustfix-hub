@@ -16,6 +16,7 @@ export default function Pricing() {
   const [searchParams, setSearchParams] = useSearchParams();
   const status = searchParams.get("status");
 
+  // Handle success/cancel redirects
   useEffect(() => {
     if (status === "success") {
       toast({
@@ -35,8 +36,9 @@ export default function Pricing() {
     }
   }, [status]);
 
+  // MAIN CHECKOUT FUNCTION — NOW FIXED
   const handleCheckout = async (priceId: string) => {
-    console.log("🚀 PRICE ID SENT TO EDGE FUNCTION:", priceId);
+    console.log("🔥 PRICE ID SENT TO EDGE FUNCTION:", priceId);
     setLoading(priceId);
 
     try {
@@ -72,7 +74,7 @@ export default function Pricing() {
       <Header />
 
       <main className="flex-1">
-        {/* Hero */}
+        {/* Hero Section */}
         <section className="py-20 gradient-green">
           <div className="container">
             <div className="max-w-3xl mx-auto text-center">
@@ -86,7 +88,7 @@ export default function Pricing() {
           </div>
         </section>
 
-        {/* Pricing */}
+        {/* Pricing Cards */}
         <section className="py-20 bg-background">
           <div className="container">
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
@@ -144,7 +146,7 @@ export default function Pricing() {
               ))}
             </div>
 
-            {/* Guarantee */}
+            {/* Guarantee Section */}
             <div className="mt-16 max-w-3xl mx-auto">
               <Card className="glass-card border-accent/20">
                 <CardHeader>
