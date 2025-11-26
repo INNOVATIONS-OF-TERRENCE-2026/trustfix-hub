@@ -1,14 +1,18 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import promo4Day from "@/assets/results/promo-4day.png";
-import promoChex from "@/assets/results/promo-chexsystems.png";
-import creditScore from "@/assets/results/credit-score-769.jpg";
+import creditScore658 from "@/assets/results/credit-score-658.jpg";
+import creditScore714 from "@/assets/results/credit-score-714.png";
+import creditScore681 from "@/assets/results/credit-score-681.jpg";
+import creditScore741 from "@/assets/results/credit-score-741.jpg";
+import creditScore723 from "@/assets/results/credit-score-723.jpg";
+import creditScore769 from "@/assets/results/credit-score-769.jpg";
 
 export const ResultsPreviewCard = () => {
   const previewImages = [
-    { src: promo4Day, alt: "4-Day Credit Removal Service" },
-    { src: promoChex, alt: "24-Hour ChexSystems Removal" },
-    { src: creditScore, alt: "Client Credit Score Result" },
+    { src: creditScore714, alt: "Client Experian Score 714 Good - Increased 228 Points" },
+    { src: creditScore741, alt: "Client Experian Score 741 Very Good - Increased 173 Points" },
+    { src: creditScore723, alt: "Client Experian Score 723 Good - Increased 158 Points" },
+    { src: creditScore769, alt: "Client Experian Score 769 Very Good" },
   ];
 
   return (
@@ -24,9 +28,14 @@ export const ResultsPreviewCard = () => {
             {previewImages.map((image, index) => (
               <div
                 key={index}
-                className="aspect-square rounded-lg overflow-hidden border border-border/50 shadow-sm hover:shadow-md transition-shadow"
+                className="aspect-[3/4] rounded-xl overflow-hidden border border-border/50 shadow-sm hover:shadow-elegant hover:scale-[1.02] transition-all duration-300"
               >
-                <img src={image.src} alt={image.alt} className="w-full h-full object-cover" loading="lazy" />
+                <img 
+                  src={image.src} 
+                  alt={image.alt} 
+                  className="w-full h-full object-cover" 
+                  loading="lazy" 
+                />
               </div>
             ))}
           </div>
