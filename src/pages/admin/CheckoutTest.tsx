@@ -69,11 +69,12 @@ export default function CheckoutTest() {
 
     // Test 4: Edge Functions
     try {
-      const { data, error } = await supabase.functions.invoke('create-checkout-session', {
+      const { data, error } = await supabase.functions.invoke('create-subscription-checkout', {
         body: { 
-          priceId: 'test', 
-          productId: 'test',
-          test: true 
+          priceId: 'price_1SVlu5DdYjAsmtGqhsQM4snp',
+          productTitle: 'Test Product',
+          successPath: '/portal/dashboard',
+          cancelPath: '/pricing?status=cancelled'
         }
       });
       testResults.edgeFunctions = {

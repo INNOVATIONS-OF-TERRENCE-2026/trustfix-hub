@@ -11,25 +11,36 @@ import { supabase } from "@/integrations/supabase/client";
 
 const SERVICE_PLANS = [
   {
-    id: "starter",
-    name: "4-Day Removal - Starter",
-    price: 40,
-    description: "Start for only $40 down",
-    features: ["4-day guaranteed removal", "Up to 5 items", "Basic support"]
+    id: "basic",
+    name: "Basic Credit Removal (Up to 5 Items)",
+    price: 500,
+    priceId: "price_1SVlu5DdYjAsmtGqhsQM4snp",
+    description: "Remove up to 5 negative items from your credit report",
+    features: ["4-day guaranteed removal", "Up to 5 items", "Encrypted document storage", "Email support"]
+  },
+  {
+    id: "premium",
+    name: "Premium Credit Removal (Unlimited Items)",
+    price: 750,
+    priceId: "price_1SWmNQDdYjAsmtGqnBx3GgZs",
+    description: "Remove unlimited negative items",
+    features: ["Unlimited items removed", "4-day guarantee per batch", "VIP 24/7 support", "Dedicated agent"]
   },
   {
     id: "chexsystems",
-    name: "ChexSystems 24-Hour",
+    name: "24-Hour ChexSystems Removal",
     price: 400,
+    priceId: "price_1SWmPvDdYjAsmtGqe4wUgKQE",
     description: "Complete ChexSystems removal in 24 hours",
-    features: ["24-hour guaranteed removal", "Full report deletion", "Priority support"]
+    features: ["24-hour guaranteed removal", "Full ChexSystems report deletion", "Priority support"]
   },
   {
-    id: "unlimited",
-    name: "Unlimited Items",
-    price: 999,
-    description: "Remove unlimited negative items",
-    features: ["Unlimited items", "4-day guarantee", "VIP support", "Dedicated agent"]
+    id: "mentorship",
+    name: "Credit Mentorship Add-On",
+    price: 1200,
+    priceId: "price_1SWmeqDdYjAsmtGqDKZPTdDf",
+    description: "Expert credit mentorship and consultation",
+    features: ["One-on-one mentorship", "Personalized credit building plan", "Monthly strategy sessions"]
   }
 ];
 
@@ -56,11 +67,12 @@ export default function Payments() {
         throw new Error("Invalid plan selected");
       }
 
-      const { data, error } = await supabase.functions.invoke("create-checkout-session", {
+      const { data, error } = await supabase.functions.invoke("create-subscription-checkout", {
         body: {
-          priceAmount: planDetails.price,
-          serviceName: planDetails.name,
-          planType: planDetails.id,
+          priceId: planDetails.priceId,
+          productTitle: planDetails.name,
+          successPath: "/portal/dashboard",
+          cancelPath: "/pricing?status=cancelled",
         },
       });
 
