@@ -36,14 +36,15 @@ export default function Pricing() {
     }
   }, [status]);
 
-  const handleCheckout = async (priceId: string) => {
+  const handleCheckout = async (priceId: string, productTitle: string) => {
     setLoading(priceId);
     
     try {
-      const { data, error } = await supabase.functions.invoke('create-checkout-session', {
+      const { data, error } = await supabase.functions.invoke('create-subscription-checkout', {
         body: {
           priceId,
-          successPath: "/pricing?status=success",
+          productTitle,
+          successPath: "/portal/dashboard",
           cancelPath: "/pricing?status=cancelled"
         }
       });
@@ -121,7 +122,7 @@ export default function Pricing() {
                       ))}
                     </ul>
                     <Button 
-                      onClick={() => handleCheckout(plan.stripePriceId)}
+                      onClick={() => handleCheckout(plan.stripePriceId, plan.name)}
                       disabled={loading === plan.stripePriceId}
                       className={`w-full ${plan.popular ? 'shadow-gold' : ''}`}
                       variant={plan.popular ? 'default' : 'outline'}

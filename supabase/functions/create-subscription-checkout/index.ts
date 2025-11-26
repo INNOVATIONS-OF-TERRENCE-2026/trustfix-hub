@@ -1,0 +1,116 @@
+import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
+import Stripe from "https://esm.sh/stripe@18.5.0";
+
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+};
+
+const ALLOWED_PRICE_IDS = new Set([
+  "price_1SVlu5DdYjAsmtGqhsQM4snp", // Basic Credit Removal (Up to 5 Items)
+  "price_1SWmNQDdYjAsmtGqnBx3GgZs", // Premium Credit Removal (Unlimited Items)
+  "price_1SWmPvDdYjAsmtGqe4wUgKQE", // 24-Hour ChexSystems Removal
+  "price_1SWmeqDdYjAsmtGqDKZPTdDf", // Credit Mentorship Add-On
+]);
+
+serve(async (req) => {
+  if (req.method === "OPTIONS") {
+    return new Response(null, { headers: corsHeaders });
+  }
+
+  if (req.method !== "POST") {
+    return new Response(
+      JSON.stringify({ error: "Method not allowed. Use POST." }),
+      {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 405,
+      }
+    );
+  }
+
+  try {
+    console.log("[CREATE-SUBSCRIPTION-CHECKOUT] Function started");
+    
+    const body = await req.json();
+    const { priceId, productTitle, successPath, cancelPath } = body;
+    console.log("[CREATE-SUBSCRIPTION-CHECKOUT] Request data:", { priceId, productTitle, successPath, cancelPath });
+
+    if (!priceId) {
+      return new Response(
+        JSON.stringify({ error: "priceId is required" }),
+        {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          status: 400,
+        }
+      );
+    }
+
+    if (!ALLOWED_PRICE_IDS.has(priceId)) {
+      return new Response(
+        JSON.stringify({ error: "Invalid priceId provided" }),
+        {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          status: 400,
+        }
+      );
+    }
+
+    const stripeKey = Deno.env.get("STRIPE_SECRET_KEY");
+    if (!stripeKey) {
+      console.error("[CREATE-SUBSCRIPTION-CHECKOUT] STRIPE_SECRET_KEY not configured");
+      return new Response(
+        JSON.stringify({ error: "Stripe configuration error" }),
+        {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          status: 500,
+        }
+      );
+    }
+
+    const stripe = new Stripe(stripeKey, {
+      apiVersion: "2025-08-27.basil",
+    });
+
+    const baseUrl = "https://dewaynescredit.com";
+    const successUrl = `${baseUrl}${successPath || "/portal/dashboard"}?session_id={CHECKOUT_SESSION_ID}`;
+    const cancelUrl = `${baseUrl}${cancelPath || "/pricing?status=cancelled"}`;
+
+    console.log("[CREATE-SUBSCRIPTION-CHECKOUT] Creating session with URLs:", { successUrl, cancelUrl });
+
+    const session = await stripe.checkout.sessions.create({
+      line_items: [
+        {
+          price: priceId,
+          quantity: 1,
+        },
+      ],
+      mode: "payment",
+      payment_method_types: ["card", "affirm", "afterpay_clearpay", "klarna"],
+      success_url: successUrl,
+      cancel_url: cancelUrl,
+      metadata: {
+        productName: productTitle || "Credit Service",
+      },
+    });
+
+    console.log("[CREATE-SUBSCRIPTION-CHECKOUT] Session created successfully:", session.id);
+
+    return new Response(
+      JSON.stringify({ url: session.url, sessionId: session.id }),
+      {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 200,
+      }
+    );
+  } catch (error) {
+    console.error("[CREATE-SUBSCRIPTION-CHECKOUT] Error:", error);
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    return new Response(
+      JSON.stringify({ error: errorMessage }),
+      {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 500,
+      }
+    );
+  }
+});
