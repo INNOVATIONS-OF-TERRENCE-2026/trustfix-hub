@@ -154,28 +154,44 @@ export default function Dashboard() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Clock className="h-5 w-5" />
-                SLA Timer
+                SLA Countdown Timer
               </CardTitle>
             </CardHeader>
             <CardContent>
               {caseData?.sla_deadline ? (
-                <div className="space-y-2">
-                  <p className={`text-3xl font-bold ${
-                    timeRemaining === "EXPIRED" ? "text-destructive" : "text-accent"
-                  }`}>
-                    {timeRemaining}
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    {timeRemaining === "EXPIRED" ? "SLA deadline has passed" : "Time remaining"}
-                  </p>
-                  {timeRemaining === "EXPIRED" && (
-                    <p className="text-sm text-destructive font-semibold">
-                      Refund eligible - Contact support
+                <div className="space-y-3">
+                  <div className="flex items-baseline gap-2">
+                    <p className={`text-4xl font-bold tabular-nums ${
+                      timeRemaining === "EXPIRED" ? "text-destructive" : "text-primary"
+                    }`}>
+                      {timeRemaining}
                     </p>
-                  )}
+                    {timeRemaining !== "EXPIRED" && (
+                      <span className="text-sm text-muted-foreground">remaining</span>
+                    )}
+                  </div>
+                  <div className="space-y-1">
+                    <Badge variant="outline" className="text-xs">
+                      {caseData.service_type === "24_hour_chexsystems" 
+                        ? "24-Hour Guarantee" 
+                        : "4-Day Guarantee"}
+                    </Badge>
+                    {timeRemaining === "EXPIRED" ? (
+                      <p className="text-sm text-destructive font-semibold flex items-center gap-1">
+                        <AlertCircle className="h-4 w-4" />
+                        Refund eligible - Contact support
+                      </p>
+                    ) : (
+                      <p className="text-xs text-muted-foreground">
+                        Until {caseData.service_type === "24_hour_chexsystems" 
+                          ? "24-hour" 
+                          : "4-day"} deadline
+                      </p>
+                    )}
+                  </div>
                 </div>
               ) : (
-                <p className="text-sm text-muted-foreground">Not started</p>
+                <p className="text-sm text-muted-foreground">Timer will start when case begins</p>
               )}
             </CardContent>
           </Card>
