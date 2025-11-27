@@ -111,7 +111,8 @@ export default function ClientDetail() {
   };
 
   const getProductInfo = (productId: string) => {
-    return STRIPE_PRODUCTS.find(p => p.stripeProductId === productId);
+    // Since we're using payment links now, match by product name or id
+    return STRIPE_PRODUCTS.find(p => p.id === productId || p.name === productId);
   };
 
   if (loading) {

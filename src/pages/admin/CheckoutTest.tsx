@@ -41,8 +41,7 @@ export default function CheckoutTest() {
         products: STRIPE_PRODUCTS.map(p => ({
           name: p.name,
           price: p.displayPrice,
-          productId: p.stripeProductId,
-          priceId: p.stripePriceId,
+          paymentLink: p.stripePaymentLink,
           slaHours: p.slaHours
         })),
         status: 'pass'
@@ -67,20 +66,16 @@ export default function CheckoutTest() {
       };
     }
 
-    // Test 4: Edge Functions
+    // Test 4: Payment Links Configuration
     try {
-      const { data, error } = await supabase.functions.invoke('create-subscription-checkout', {
-        body: { 
-          priceId: 'price_1SVlu5DdYjAsmtGqhsQM4snp',
-          productTitle: 'Test Product',
-          successPath: '/portal/dashboard',
-          cancelPath: '/pricing?status=cancelled'
-        }
-      });
+      const allLinksValid = STRIPE_PRODUCTS.every(p => 
+        p.stripePaymentLink && p.stripePaymentLink.startsWith('https://buy.stripe.com/')
+      );
       testResults.edgeFunctions = {
-        checkoutFunction: error ? 'fail' : 'pass',
-        error: error?.message,
-        response: data
+        paymentLinksConfigured: allLinksValid,
+        totalLinks: STRIPE_PRODUCTS.length,
+        status: allLinksValid ? 'pass' : 'fail',
+        note: 'Using direct Stripe Payment Links - no edge function needed for checkout'
       };
     } catch (e) {
       testResults.edgeFunctions = {
