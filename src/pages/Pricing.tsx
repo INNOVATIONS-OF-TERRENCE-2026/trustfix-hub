@@ -3,16 +3,14 @@ import { Footer } from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { CheckCircle2, Star, Loader2, AlertCircle, X } from "lucide-react";
+import { CheckCircle2, Star } from "lucide-react";
 import { STRIPE_PRODUCTS } from "@/config/stripeProducts";
-import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/hooks/use-toast";
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Pricing() {
   const { toast } = useToast();
-  const [loading, setLoading] = useState<string | null>(null);
   const [searchParams, setSearchParams] = useSearchParams();
   const status = searchParams.get("status");
 
@@ -36,36 +34,8 @@ export default function Pricing() {
     }
   }, [status]);
 
-  const handleCheckout = async (priceId: string, productTitle: string) => {
-    setLoading(priceId);
-    
-    try {
-      const { data, error } = await supabase.functions.invoke('create-subscription-checkout', {
-        body: {
-          priceId,
-          productTitle,
-          successPath: "/portal/dashboard",
-          cancelPath: "/pricing?status=cancelled"
-        }
-      });
-
-      if (error) throw error;
-      
-      if (data?.url) {
-        window.location.href = data.url;
-      } else {
-        throw new Error("No checkout URL returned");
-      }
-    } catch (error: any) {
-      console.error("Checkout error:", error);
-      toast({
-        title: "Checkout Error",
-        description: error.message || "Unable to start checkout. Please try again or contact support.",
-        variant: "destructive"
-      });
-    } finally {
-      setLoading(null);
-    }
+  const handleCheckout = (paymentLink: string) => {
+    window.open(paymentLink, '_blank');
   };
 
   return (
@@ -122,19 +92,11 @@ export default function Pricing() {
                       ))}
                     </ul>
                     <Button 
-                      onClick={() => handleCheckout(plan.stripePriceId, plan.name)}
-                      disabled={loading === plan.stripePriceId}
+                      onClick={() => handleCheckout(plan.stripePaymentLink)}
                       className={`w-full ${plan.popular ? 'shadow-gold' : ''}`}
                       variant={plan.popular ? 'default' : 'outline'}
                     >
-                      {loading === plan.stripePriceId ? (
-                        <>
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          Processing...
-                        </>
-                      ) : (
-                        `Get ${plan.name.split(' ')[0]} Plan`
-                      )}
+                      Get {plan.name.split(' ')[0]} Plan
                     </Button>
                   </CardContent>
                 </Card>

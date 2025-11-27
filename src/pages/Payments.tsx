@@ -5,16 +5,15 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { CheckCircle, CreditCard, Loader2 } from "lucide-react";
+import { CheckCircle, CreditCard } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
 
 const SERVICE_PLANS = [
   {
     id: "basic",
     name: "Basic Credit Removal (Up to 5 Items)",
     price: 500,
-    priceId: "price_1SVlu5DdYjAsmtGqhsQM4snp",
+    paymentLink: "https://buy.stripe.com/28E8wPaFK3yM9rq0Iu0Fi00",
     description: "Remove up to 5 negative items from your credit report",
     features: ["4-day guaranteed removal", "Up to 5 items", "Encrypted document storage", "Email support"]
   },
@@ -22,7 +21,7 @@ const SERVICE_PLANS = [
     id: "premium",
     name: "Premium Credit Removal (Unlimited Items)",
     price: 750,
-    priceId: "price_1SWmNQDdYjAsmtGqnBx3GgZs",
+    paymentLink: "https://buy.stripe.com/aFa6oH4hmglyeLK4YK0Fi01",
     description: "Remove unlimited negative items",
     features: ["Unlimited items removed", "4-day guarantee per batch", "VIP 24/7 support", "Dedicated agent"]
   },
@@ -30,7 +29,7 @@ const SERVICE_PLANS = [
     id: "chexsystems",
     name: "24-Hour ChexSystems Removal",
     price: 400,
-    priceId: "price_1SWmPvDdYjAsmtGqe4wUgKQE",
+    paymentLink: "https://buy.stripe.com/00wbJ129e5GUfPO0Iu0Fi02",
     description: "Complete ChexSystems removal in 24 hours",
     features: ["24-hour guaranteed removal", "Full ChexSystems report deletion", "Priority support"]
   },
@@ -38,7 +37,7 @@ const SERVICE_PLANS = [
     id: "mentorship",
     name: "Credit Mentorship Add-On",
     price: 1200,
-    priceId: "price_1SWmeqDdYjAsmtGqDKZPTdDf",
+    paymentLink: "https://buy.stripe.com/9B67sL8xC1qEcDC76S0Fi03",
     description: "Expert credit mentorship and consultation",
     features: ["One-on-one mentorship", "Personalized credit building plan", "Monthly strategy sessions"]
   }
@@ -46,10 +45,9 @@ const SERVICE_PLANS = [
 
 export default function Payments() {
   const [selectedPlan, setSelectedPlan] = useState<string>("");
-  const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
-  const handlePayment = async () => {
+  const handlePayment = () => {
     if (!selectedPlan) {
       toast({
         title: "Selection Required",
@@ -59,41 +57,13 @@ export default function Payments() {
       return;
     }
 
-    setLoading(true);
-
-    try {
-      const planDetails = SERVICE_PLANS.find(p => p.id === selectedPlan);
-      if (!planDetails) {
-        throw new Error("Invalid plan selected");
-      }
-
-      const { data, error } = await supabase.functions.invoke("create-subscription-checkout", {
-        body: {
-          priceId: planDetails.priceId,
-          productTitle: planDetails.name,
-          successPath: "/portal/dashboard",
-          cancelPath: "/pricing?status=cancelled",
-        },
-      });
-
-      if (error) throw error;
-
-      if (data?.url) {
-        window.open(data.url, '_blank');
-        toast({
-          title: "Redirecting to Stripe Checkout",
-          description: "Opening secure payment window...",
-        });
-      }
-    } catch (error) {
-      console.error("Payment error:", error);
+    const planDetails = SERVICE_PLANS.find(p => p.id === selectedPlan);
+    if (planDetails) {
+      window.open(planDetails.paymentLink, '_blank');
       toast({
-        title: "Payment Error",
-        description: "Failed to initialize payment. Please try again.",
-        variant: "destructive"
+        title: "Opening Stripe Checkout",
+        description: "Secure payment window opening...",
       });
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -186,21 +156,12 @@ export default function Payments() {
 
                 <Button
                   onClick={handlePayment}
-                  disabled={!selectedPlan || loading}
+                  disabled={!selectedPlan}
                   className="w-full shadow-gold"
                   size="lg"
                 >
-                  {loading ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Processing...
-                    </>
-                  ) : (
-                    <>
-                      Continue to Secure Checkout
-                      <CreditCard className="ml-2 h-4 w-4" />
-                    </>
-                  )}
+                  Continue to Secure Checkout
+                  <CreditCard className="ml-2 h-4 w-4" />
                 </Button>
 
                 <p className="text-xs text-center text-muted-foreground">
