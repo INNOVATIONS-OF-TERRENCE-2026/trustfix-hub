@@ -16,6 +16,7 @@ import Documents from "./pages/portal/Documents";
 import Messages from "./pages/portal/Messages";
 import Profile from "./pages/portal/Profile";
 import AdminDashboard from "./pages/admin/AdminDashboard";
+import Admin from "./pages/admin/Admin";
 import ClientDetail from "./pages/admin/ClientDetail";
 import ChexSystems from "./pages/ChexSystems";
 import Payments from "./pages/Payments";
@@ -57,6 +58,7 @@ const App = () => (
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/guarantee" element={<Guarantee />} />
           <Route path="/results" element={<Results />} />
+          <Route path="/admin" element={<Admin />} />
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
           <Route path="/admin/client/:clientId" element={<ClientDetail />} />
           <Route path="/admin/checkout-test" element={<CheckoutTest />} />
