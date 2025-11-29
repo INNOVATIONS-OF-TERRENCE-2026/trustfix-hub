@@ -15,7 +15,8 @@ export const STRIPE_PRODUCTS = [
       'Progress tracking'
     ],
     slaHours: 96,
-    popular: false
+    popular: false,
+    badge: undefined
   },
   {
     id: 'premium',
@@ -35,7 +36,8 @@ export const STRIPE_PRODUCTS = [
       'Credit score monitoring'
     ],
     slaHours: 96,
-    popular: true
+    popular: true,
+    badge: undefined
   },
   {
     id: 'chexsystems',
@@ -53,7 +55,8 @@ export const STRIPE_PRODUCTS = [
       'Money-back guarantee'
     ],
     slaHours: 24,
-    popular: false
+    popular: false,
+    badge: undefined
   },
   {
     id: 'mentorship',
@@ -71,7 +74,25 @@ export const STRIPE_PRODUCTS = [
       'Ongoing support for 6 months'
     ],
     slaHours: 96,
-    popular: false
+    popular: false,
+    badge: undefined
+  },
+  {
+    id: 'christmas',
+    name: 'Christmas Credit Special',
+    price: 300,
+    displayPrice: '$300',
+    stripePaymentLink: 'https://buy.stripe.com/7sY9AT6pu1qEeLKbn80Fi04',
+    description: '🎄 Holiday Special – Limited Offer',
+    features: [
+      'Collections removal',
+      'Charge-offs',
+      'Repos',
+      'Late payments'
+    ],
+    slaHours: 96,
+    popular: false,
+    badge: '🎄 Holiday Special – Limited Offer'
   }
 ] as const;
 

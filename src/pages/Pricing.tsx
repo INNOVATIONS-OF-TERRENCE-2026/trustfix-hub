@@ -74,6 +74,11 @@ export default function Pricing() {
                       Most Popular
                     </Badge>
                   )}
+                  {plan.badge && (
+                    <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-green-600 to-red-600 text-white shadow-lg">
+                      {plan.badge}
+                    </Badge>
+                  )}
                   <CardHeader className="text-center">
                     <CardTitle className="text-2xl font-display mb-2">{plan.name}</CardTitle>
                     <CardDescription>{plan.description}</CardDescription>
@@ -96,7 +101,7 @@ export default function Pricing() {
                       className={`w-full ${plan.popular ? 'shadow-gold' : ''}`}
                       variant={plan.popular ? 'default' : 'outline'}
                     >
-                      Get {plan.name.split(' ')[0]} Plan
+                      {plan.id === 'christmas' ? 'Get Christmas Special' : `Get ${plan.name.split(' ')[0]} Plan`}
                     </Button>
                   </CardContent>
                 </Card>
