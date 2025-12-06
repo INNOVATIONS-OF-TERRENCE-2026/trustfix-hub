@@ -9,7 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 
-const ADMIN_EMAIL = "darrellcunningham20@gmail.com";
+const ADMIN_EMAIL = "beatzbyyt.ceo@gmail.com";
 
 export default function Admin() {
   const navigate = useNavigate();
