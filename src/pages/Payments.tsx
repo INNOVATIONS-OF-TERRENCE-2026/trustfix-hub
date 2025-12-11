@@ -13,7 +13,7 @@ const SERVICE_PLANS = [
     id: "basic",
     name: "Basic Credit Removal (Up to 5 Items)",
     price: 500,
-    paymentLink: "https://buy.stripe.com/28E8wPaFK3yM9rq0Iu0Fi00",
+    paymentLink: "https://buy.stripe.com/9B614m2GebMbdPm5T2gbm02",
     description: "Remove up to 5 negative items from your credit report",
     features: ["4-day guaranteed removal", "Up to 5 items", "Encrypted document storage", "Email support"]
   },
@@ -21,7 +21,7 @@ const SERVICE_PLANS = [
     id: "premium",
     name: "Premium Credit Removal (Unlimited Items)",
     price: 750,
-    paymentLink: "https://buy.stripe.com/aFa6oH4hmglyeLK4YK0Fi01",
+    paymentLink: "https://buy.stripe.com/6oU00ibcKdUj12A0ylgbm04",
     description: "Remove unlimited negative items",
     features: ["Unlimited items removed", "4-day guarantee per batch", "VIP 24/7 support", "Dedicated agent"]
   },
@@ -29,7 +29,7 @@ const SERVICE_PLANS = [
     id: "chexsystems",
     name: "24-Hour ChexSystems Removal",
     price: 400,
-    paymentLink: "https://buy.stripe.com/00wbJ129e5GUfPO0Iu0Fi02",
+    paymentLink: "https://buy.stripe.com/fZu4gybcK03t3al81agbm05",
     description: "Complete ChexSystems removal in 24 hours",
     features: ["24-hour guaranteed removal", "Full ChexSystems report deletion", "Priority support"]
   },
@@ -37,9 +37,17 @@ const SERVICE_PLANS = [
     id: "mentorship",
     name: "Credit Mentorship Add-On",
     price: 1200,
-    paymentLink: "https://buy.stripe.com/9B67sL8xC1qEcDC76S0Fi03",
+    paymentLink: "https://buy.stripe.com/6oUfZg6Wu5nNeTq5T2gbm03",
     description: "Expert credit mentorship and consultation",
     features: ["One-on-one mentorship", "Personalized credit building plan", "Monthly strategy sessions"]
+  },
+  {
+    id: "christmas",
+    name: "Christmas Credit Special",
+    price: 300,
+    paymentLink: "https://buy.stripe.com/7sY9AT6pu1qEeLKbn80Fi04",
+    description: "🎄 Holiday Special – Limited Offer",
+    features: ["Collections removal", "Charge-offs", "Repos", "Late payments"]
   }
 ];
 
