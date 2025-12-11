@@ -1,27 +1,22 @@
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Shield, LogOut, User, ShieldCheck } from "lucide-react";
+import { Shield, LogOut, User } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useEffect, useState } from "react";
-
-const ADMIN_EMAIL = "beatzbyyt.ceo@gmail.com";
 
 export const Header = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [user, setUser] = useState<any>(null);
-  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
-      setIsAdmin(session?.user?.email === ADMIN_EMAIL);
     });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
-      setIsAdmin(session?.user?.email === ADMIN_EMAIL);
     });
 
     return () => subscription.unsubscribe();
@@ -60,18 +55,10 @@ export const Header = () => {
             FAQ
           </Link>
           {user ? (
-            <>
-              <Link to="/portal/dashboard" className="text-foreground/80 hover:text-foreground transition-colors flex items-center gap-1">
-                <User className="h-4 w-4" />
-                Portal
-              </Link>
-              {isAdmin && (
-                <Link to="/admin" className="text-foreground/80 hover:text-foreground transition-colors flex items-center gap-1">
-                  <ShieldCheck className="h-4 w-4" />
-                  Admin
-                </Link>
-              )}
-            </>
+            <Link to="/portal/dashboard" className="text-foreground/80 hover:text-foreground transition-colors flex items-center gap-1">
+              <User className="h-4 w-4" />
+              Portal
+            </Link>
           ) : (
             <Link to="/auth" className="text-foreground/80 hover:text-foreground transition-colors">
               Login
